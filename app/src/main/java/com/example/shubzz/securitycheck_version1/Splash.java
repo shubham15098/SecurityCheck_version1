@@ -19,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class Splash extends AppCompatActivity {
     String now_playing, earned;
     FirebaseDatabase database;
@@ -45,7 +47,6 @@ public class Splash extends AppCompatActivity {
             super.onPreExecute();
             db = FirebaseFirestore.getInstance();
             docRef = db.collection("users").document(user.getUid());
-
         }
 
         @Override
@@ -69,6 +70,12 @@ public class Splash extends AppCompatActivity {
                         }
                     } else {
                         Log.d("fuck", "get failed with ", task.getException());
+                        new SweetAlertDialog(Splash.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Fetch error")
+                                .setContentText(task.getException().getLocalizedMessage().toString())
+                                .setConfirmText("OK")
+                                .show();
+                        return;
                     }
                 }
             });

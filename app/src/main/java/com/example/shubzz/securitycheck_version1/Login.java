@@ -1,13 +1,19 @@
 package com.example.shubzz.securitycheck_version1;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUserMetadata;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 
@@ -15,10 +21,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Login extends AppCompatActivity {
 public static int RC_SIGN_IN=1;
+    FirebaseAuth auth;
+    FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // already signed in
         } else {
@@ -44,9 +52,32 @@ public static int RC_SIGN_IN=1;
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-                Intent i = new Intent(Login.this, Supervisor.class);
-                startActivity(i);
-                finish();
+                FirebaseUserMetadata metadata = auth.getCurrentUser().getMetadata();
+                if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                    UserAccountModel model= new UserAccountModel();
+                    model.Email=auth.getCurrentUser().getEmail();
+                    db.collection("users").document(auth.getCurrentUser().getUid())
+                            .set(model)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("fuck", "DocumentSnapshot successfully written!");
+                                    Intent RegularUser;
+                                    if (auth.getCurrentUser().getEmail().equals("dewansh15025@iiitd.ac.in"))
+                                        RegularUser = new Intent(Login.this,Arun.class);
+                                    else
+                                        RegularUser=new Intent(Login.this,Supervisor.class);
+                                    startActivity(RegularUser);
+                                    finish();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("fuck", "Error writing document", e);
+                                }
+                            });
+                }
             } else {
                 // Sign in failed
                 if (response == null) {

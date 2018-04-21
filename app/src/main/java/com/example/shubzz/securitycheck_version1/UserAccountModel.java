@@ -7,6 +7,10 @@ public class UserAccountModel {
         Email = email;
     }
 
+    public UserAccountModel(){
+
+    }
+
     public String getEmail() {
         return Email;
     }
