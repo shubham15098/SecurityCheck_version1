@@ -8,48 +8,94 @@
     android:weightSum="1"
     tools:context="com.example.shubzz.securitycheck_version1.MainActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#03a9f4" />
+
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="263dp"
         android:layout_height="299dp"
-        android:layout_weight="0.25"
+
         app:srcCompat="@drawable/ellipse1"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp" />
+        android:layout_marginTop="10dp" />
 
-    <MultiAutoCompleteTextView
+    <TextView
         android:id="@+id/multiAutoCompleteTextView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/multiAutoCompleteTextView"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginBottom="125dp"
         android:text="CONNECTED"
         android:textStyle="bold"
         android:textSize="30dp"
         android:textColor="#ffffff"/>
 
-    <MultiAutoCompleteTextView
+    <TextView
         android:id="@+id/multiAutoCompleteTextView"
         android:layout_width="wrap_content"
-        android:layout_height="107dp"
+        android:layout_height="wrap_content"
         android:text="Good Job !"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
+
+        android:padding="8dp"
         android:textStyle="bold"
-        android:textSize="30dp"/>
+        android:textSize="30dp"
+        android:gravity="center"/>
+
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="check"
-        android:id="@+id/check"/>
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/notSoBlack"
+        android:layout_alignParentBottom="true"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/security"
+            android:layout_weight="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/MyFont"
+            android:textColor="@android:color/white"
+            android:text="Area: "
+            android:layout_weight="0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="check"
+            android:id="@+id/check"
+            style="@style/MyFont"
+            android:textColor="@color/colorAccent"/>
+
+        <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/security"
+            android:layout_weight="0"/>
+
+    </LinearLayout>
+
+
+
+
 
 </RelativeLayout>
