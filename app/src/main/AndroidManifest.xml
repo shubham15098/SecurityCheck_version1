@@ -27,7 +27,9 @@
             android:name=".TakeAttendance"
             android:screenOrientation="portrait" />
         <activity android:name=".Login" />
-        <activity android:name=".Splash" />
+        <activity android:name=".Splash" >
+
+        </activity>
         <activity android:name=".Arun" />
         <activity android:name=".Supervisor"></activity>
     </application>

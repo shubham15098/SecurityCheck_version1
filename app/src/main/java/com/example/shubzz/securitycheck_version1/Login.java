@@ -38,9 +38,7 @@ public static int RC_SIGN_IN=1;
                         .setAvailableProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.EmailBuilder().build(),
                                 new AuthUI.IdpConfig.PhoneBuilder().build(),
-                                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                new AuthUI.IdpConfig.FacebookBuilder().build(),
-                                new AuthUI.IdpConfig.TwitterBuilder().build()))
+                                new AuthUI.IdpConfig.GoogleBuilder().build()))
                         .build(),
                 RC_SIGN_IN);
     }
@@ -52,10 +50,12 @@ public static int RC_SIGN_IN=1;
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
+                auth=FirebaseAuth.getInstance();
                 FirebaseUserMetadata metadata = auth.getCurrentUser().getMetadata();
                 if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
                     UserAccountModel model= new UserAccountModel();
                     model.Email=auth.getCurrentUser().getEmail();
+                    db = FirebaseFirestore.getInstance();
                     db.collection("users").document(auth.getCurrentUser().getUid())
                             .set(model)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -87,20 +87,12 @@ public static int RC_SIGN_IN=1;
                 }
 
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Connectivity issue")
-                            .setContentText("unable to connect to internet")
-                            .setConfirmText("OK")
-                            .show();
+
                     return;
                 }
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("ERROR")
-                        .setContentText(response.getError().toString())
-                        .setConfirmText("OK")
-                        .show();
-                return;
 
+
+                Log.e("fuck", "Sign-in error: ", response.getError());
             }
         }
     }

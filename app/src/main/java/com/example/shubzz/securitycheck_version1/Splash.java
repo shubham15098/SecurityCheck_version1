@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,12 +30,21 @@ public class Splash extends AppCompatActivity {
     DocumentReference docRef;
     Intent RegularUser;
     UserAccountModel userAccountModel;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new PrefetchData().execute();
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+
+            new PrefetchData().execute();
+        }else{
+            Intent i = new Intent(Splash.this,Login.class);
+            startActivity(i);
+        }
+
     }
 
     /**
@@ -46,7 +56,7 @@ public class Splash extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             db = FirebaseFirestore.getInstance();
-            docRef = db.collection("users").document(user.getUid());
+            docRef = db.collection("users").document(auth.getCurrentUser().getUid());
         }
 
         @Override
@@ -60,12 +70,18 @@ public class Splash extends AppCompatActivity {
                         if (document != null && document.exists()) {
                             Log.d("fuck", "DocumentSnapshot data: " + document.getData());
                             userAccountModel=document.toObject(UserAccountModel.class);
-                            if(userAccountModel.Email.equals("dewansh15025"))
-                                 RegularUser = new Intent(Splash.this,Arun.class);
-                             else
+                            if(userAccountModel.Email.equals("dewansh15025@iiitd.ac.in"))
+                            {RegularUser = new Intent(Splash.this,Arun.class);
+                            startActivity(RegularUser);
+                            finish();}
+                            else{
                                  RegularUser=new Intent(Splash.this,Arun.class);
+                            startActivity(RegularUser);
+                            finish();}
                         } else {
                             RegularUser = new Intent(Splash.this,Login.class);
+                            startActivity(RegularUser);
+                            finish();
                             Log.d("fuck", "No such document");
                         }
                     } else {
@@ -87,8 +103,7 @@ public class Splash extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            startActivity(RegularUser);
-            finish();
+
         }
 
     }
