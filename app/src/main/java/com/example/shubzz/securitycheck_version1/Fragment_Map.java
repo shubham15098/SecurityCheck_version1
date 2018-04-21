@@ -45,7 +45,8 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
     }
