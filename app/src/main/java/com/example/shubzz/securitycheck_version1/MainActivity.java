@@ -1,11 +1,17 @@
 package com.example.shubzz.securitycheck_version1;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +48,59 @@ public class MainActivity extends AppCompatActivity {
     public Map<String, String> myMap = new HashMap<>();
     public int flag = 0;
 
+    private BroadcastReceiver broadcastReceiver;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(broadcastReceiver == null){
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    Log.d("asd",""+intent.getExtras().get("coordinates"));
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(broadcastReceiver != null){
+            unregisterReceiver(broadcastReceiver);
+        }
+    }
+    private void enable_buttons() {
+
+
+
+    }
+
+    private boolean runtime_permissions() {
+        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},100);
+
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 100){
+            if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                enable_buttons();
+            }else {
+                runtime_permissions();
+            }
+        }
+    }
+
+
+
+
     public String getMacId()
     {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -61,7 +120,9 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //start gps service
+        Intent i =new Intent(getApplicationContext(),GPS_Service.class);
+        startService(i);
 //        Button bun = (Button) findViewById(R.id.bun);
 //        bun.setOnClickListener(new View.OnClickListener()
 //        {
@@ -73,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        ImageView img2 = (ImageView) findViewById(R.id.imageView);
+       /* ImageView img2 = (ImageView) findViewById(R.id.imageView);
         img2.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -170,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
+*/
 
 
     }
