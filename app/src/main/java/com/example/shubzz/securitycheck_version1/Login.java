@@ -1,5 +1,6 @@
 package com.example.shubzz.securitycheck_version1;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -77,25 +78,11 @@ public static int RC_SIGN_IN=1;
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-                String mailer=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                if(mailer.equals("dewansh15025@iiitd.ac.in")||mailer.contains("shubham15098")||mailer.contains("ishmeet150")){
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("user_type", "arun");
-                    editor.commit();
-                Intent Start=new Intent(Login.this,Arun.class);
-                startActivity(Start);
-                finish();}
-                else{
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("user_type", "supervisor");
-                    editor.commit();
-                    Intent Start=new Intent(Login.this,Supervisor.class);
-                    startActivity(Start);
-                    finish();
-                }
-               /* final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final ProgressDialog p = new ProgressDialog(this);
+                p.setCancelable(false);
+                p.setTitle("Fetching Data");
+                p.show();
+               final FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference ref = database.getReference("/users/"+FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
                 ref.addChildEventListener(new ChildEventListener() {
 
@@ -105,14 +92,18 @@ public static int RC_SIGN_IN=1;
                         Log.d("add The up:" , changedPost);
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
                         SharedPreferences.Editor editor = pref.edit();
-                        if(changedPost.contains("creator")&&changedPost.contains("yes")){
+                        if(changedPost.contains("authority")&&changedPost.contains("yes")){
                             Log.d("role pro" , "teacer");
                             editor.putString("user_type", "arun");
+                            editor.commit();
                             Intent i = new Intent(Login.this, Arun.class);
+                            p.dismiss();
                             startActivity(i);
                         }
-                        else if (changedPost.contains("creator")&&changedPost.contains("no")){
+                        else if (changedPost.contains("authority")&&changedPost.contains("no")){
                             Log.d("role pro" , "supervisor");
+                            editor.putString("user_type", "supervisor");
+                            editor.commit();
                             Intent i = new Intent(Login.this, Supervisor.class);
                             startActivity(i);
                         }
@@ -141,7 +132,7 @@ public static int RC_SIGN_IN=1;
 
                     }
                 });
-               */
+
             } else {
                 // Sign in failed
                 if (response == null) {
