@@ -28,7 +28,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-
+/*
+* the below code was taken from google code labs directly
+* https://codelabs.developers.google.com/codelabs/realtime-asset-tracking/index.html?index=..%2F..%2Findex#6
+* start here
+* */
 public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
@@ -40,9 +44,6 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
     public Fragment_Map() {
         // Required empty public constructor
     }
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -123,3 +124,4 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
     }
 
 }
+/*end here*/
