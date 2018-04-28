@@ -15,7 +15,7 @@
         app:srcCompat="@android:drawable/ic_menu_help" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/guardname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,15 +24,15 @@
         android:layout_marginTop="39dp"
         android:layout_toEndOf="@+id/imageView2"
         android:layout_toRightOf="@+id/imageView2"
-        android:text="TextView" />
+        android:text="Shubham Kumar" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/guardname"
+        android:layout_alignStart="@+id/guardname"
+        android:layout_below="@+id/guardname"
         android:layout_marginTop="15dp"
         android:text="TextView" />
 
@@ -103,22 +103,20 @@
         android:textSize="20dp" />
 
     <Button
-        android:id="@+id/upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="47dp"
-        android:text="Upload" />
-
-    <Button
         android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="121dp"
-        android:text="Camera" />
+        android:layout_below="@+id/imageView6"
+        android:layout_centerHorizontal="true"
+        android:text="capture and upload" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="198dp"
+        android:layout_height="133dp"
+        android:layout_below="@+id/camera"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/blue_button_background" />
 
 
 </RelativeLayout>

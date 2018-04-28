@@ -3,6 +3,15 @@ package com.example.shubzz.securitycheck_version1;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -10,8 +19,9 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class ImageSlider extends AppCompatActivity {
     private static ViewPager mPager;
+    private DatabaseReference ref;
     private static int currentPage = 0;
-   String s1="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg?auto=compress&cs=tinysrgb&h=350";
+    String s1="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg?auto=compress&cs=tinysrgb&h=350";
     String s2="https://i.pinimg.com/originals/e2/a6/57/e2a657e2476d73760d32f63429b0d597.jpg";
 
     private ArrayList<String> XMENArray = new ArrayList<String>();
@@ -23,8 +33,18 @@ public class ImageSlider extends AppCompatActivity {
             init();
         }
         private void init() {
+        String guard= "Shubham Kumar";
+        ref=  FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase.getInstance().getReference().child("pics").child(guard).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        XMENArray.add(snapshot.getValue().toString());
+                        Log.v("print",snapshot.getValue().toString());
 
-                XMENArray.add(s1);
+//        Log.v("print", XMENArray.get(0));
+//
+               XMENArray.add(s1);
                 XMENArray.add(s2);
             mPager = (ViewPager) findViewById(R.id.pager);
             mPager.setAdapter(new ImageSliderAdapter(ImageSlider.this,XMENArray));
@@ -32,7 +52,15 @@ public class ImageSlider extends AppCompatActivity {
             indicator.setViewPager(mPager);
 
             // Auto start of viewpager
+                    }
+                }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         }
+
 
     }
