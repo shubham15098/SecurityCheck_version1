@@ -16,15 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class GuardsName extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
-    ArrayList<String> guards;
+    ArrayList<Guard> guards;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     recyler_adapter_guards_name adapter;
@@ -50,13 +53,34 @@ public class GuardsName extends AppCompatActivity {
 
     void getFirebaseData()
     {
-        
+        databaseReference = firebaseDatabase.getReference("GuardsContacts").child("Numbers");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                guards.clear();
+                for (DataSnapshot uniqueKeySnapshot : snapshot.getChildren()) {
+                    Guard g = new Guard("","");
+                        String key = (String) snapshot.getKey();
+                        String value = (String) snapshot.getValue();
+                        if (key.equals("name")) g.setName(value);
+                        if (key.equals("number")) g.setNumber(value);
+                        guards.add(g);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     public class recyler_adapter_guards_name extends RecyclerView.Adapter<GuardsName.recyler_adapter_guards_name.MyViewHolder> {
-        ArrayList<String> guards;
+        ArrayList<Guard> guards;
 
-        public recyler_adapter_guards_name(ArrayList<String> guards) {
+        public recyler_adapter_guards_name(ArrayList<Guard> guards) {
             this.guards = guards;
         }
 
@@ -69,7 +93,7 @@ public class GuardsName extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(GuardsName.recyler_adapter_guards_name.MyViewHolder holder, int position) {
-            holder.guardName.setText(guards.get(position));
+            holder.guardName.setText(guards.get(position).getName());
         }
 
         @Override
