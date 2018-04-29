@@ -30,4 +30,12 @@ public class Area {
     public void setAreaName(String areaName) {
         this.areaName = areaName;
     }
+
+    @Override
+    public String toString() {
+        return "Area{" +
+                "areaName='" + areaName + '\'' +
+                ", areaDefaults='" + areaDefaults + '\'' +
+                '}';
+    }
 }
