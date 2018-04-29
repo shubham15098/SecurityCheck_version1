@@ -1,5 +1,6 @@
 package com.example.shubzz.securitycheck_version1;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,6 +18,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import android.content.Context;
@@ -41,28 +45,53 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
     public Map<String, String> myMap = new HashMap<>();
+    public Map<String, String> guardA = new HashMap<>();
+    public Map<String, String> guardB = new HashMap<>();
+    public Map<String, String> guardC = new HashMap<>();
     public int flag = 0;
-    /*
-    * code taken from tutorial and open source developer
-    * https://github.com/miskoajkula/GPS_service/blob/master/app/src/main/java/testing/gps_service/MainActivity.java
-    * https://www.youtube.com/watch?v=lvcGh2ZgHeA
-    * start here
-    * */
+    private int time;
+    private String guardName="";
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    Calendar calobj = Calendar.getInstance();
+    String location="";
+
+
+    private BroadcastReceiver broadcastReceiver;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(broadcastReceiver == null){
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    Log.d("asd",""+intent.getExtras().get("coordinates"));
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if(broadcastReceiver != null){
+            unregisterReceiver(broadcastReceiver);
+        }
     }
-
     private void enable_buttons() {
-        Log.d("asd","service started");
-        Intent i =new Intent(getApplicationContext(),GPS_Service.class);
-        startService(i);
+
+
+
     }
 
     private boolean runtime_permissions() {
@@ -85,8 +114,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-/*end here
-* */
+
 
 
 
@@ -101,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         }
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        Log.v("wifi",wifiInfo.getBSSID());
         return wifiInfo.getBSSID();
     }
 
@@ -109,13 +138,21 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+
         //start gps service
-
-        if(!runtime_permissions()){
-            Log.d("asd","gotpermission");
-            enable_buttons();
-
-        }
+        final Intent i =new Intent(getApplicationContext(),GPS_Service.class);
+        startService(i);
+//        Button bun = (Button) findViewById(R.id.bun);
+//        bun.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Intent i = new Intent(MainActivity.this,TakeAttendance.class);
+//                startActivity(i);
+//            }
+//        });
 
         ImageView img2 = (ImageView) findViewById(R.id.imageView);
         img2.setOnClickListener(new View.OnClickListener()
@@ -129,8 +166,31 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(flag == 1)
                 {
+                    // find the guard
+                    String s = new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime());
+                    s = s.substring(0,2);
+                    time = Integer.parseInt(s);
+                    Log.v("fuck hour", String.valueOf(time));
+
+                    if(time >= 0 && time < 8)
+                    {
+                        Log.v("fuck","inside");
+                        guardName = guardC.get(location);
+                    }
+                    else if(time >= 8 && time < 16)
+                    {
+                        guardName = guardA.get(location);
+                    }
+                    else if(time >= 16 && time < 24)
+                    {
+                        guardName = guardB.get(location);
+                    }
+
+                    Log.v("fuck",guardName);
+
                     Intent i = new Intent(MainActivity.this,TakeAttendance.class);
-                    i.putExtra("gaurdname","Lavjee Singh");
+                    i.putExtra("gaurdname",guardName);
+                    i.putExtra("location",location);
                     startActivity(i);
                 }
 
@@ -141,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
 
         //make map of csv file
         readCSV();
+
+        readFromFirebase();
 
         //https://stackoverflow.com/questions/29533934/correct-way-to-run-a-continuously-called-method-in-own-thread?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
@@ -175,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 xyz = xyz.substring(0, xyz.length() - 1);
 
-                                String location = myMap.get(xyz);
+                                location = myMap.get(xyz);
 
 
                                 if (myMap.containsKey(xyz))
@@ -220,9 +282,56 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void readFromFirebase()
+    {
+        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.show();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("timetable").child("gaurdPostings");
+
+        databaseReference.addChildEventListener(new ChildEventListener()
+
+        {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot2, String s2)
+            {
+                mappingGuard g = dataSnapshot2.getValue(mappingGuard.class);
+                Log.v("fuck you",g.getGAURD1());
+                guardA.put(g.getPOST(),g.getGAURD1());
+                guardB.put(g.getPOST(),g.getGaurd2());
+                guardC.put(g.getPOST(),g.getGAURD3());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot2, String s2)
+            {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot2) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot2, String s2) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError2)
+            {
+
+            }
+        });
+        progressDialog.dismiss();
+    }
+
     private void readCSV()
     {
-        InputStream is = getResources().openRawResource(R.raw.data);
+        InputStream is = getResources().openRawResource(R.raw.mapping);
+
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is, Charset.forName("UTF-8"))
         );

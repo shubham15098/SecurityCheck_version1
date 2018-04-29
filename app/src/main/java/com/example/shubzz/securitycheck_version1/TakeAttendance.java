@@ -33,6 +33,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -50,6 +52,7 @@ public class TakeAttendance extends AppCompatActivity
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     DatabaseReference databaseReference2;
+    DatabaseReference databaseReference3;
     Button mSubmit;
     private RadioGroup radioAttendenceGroup;
     private RadioButton radioAttendenceButton;
@@ -59,6 +62,7 @@ public class TakeAttendance extends AppCompatActivity
     RadioButton radioSleepButton;
    // RadioButton radioUniformButton;
     String IntegerMapGaurd;
+    String locNameFetch;
     FirebaseAuth auth;
     FirebaseUser user;
     HashMap<Integer, String> map = new HashMap<Integer, String>();
@@ -72,11 +76,13 @@ public class TakeAttendance extends AppCompatActivity
     DatabaseReference mDatabase;
     TextView guardname;
     StorageReference filePath = null;
+    String phoneNumber="9999";
     //////
 
 
 
-
+    TextView phonenn;
+    TextView gg;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -91,7 +97,7 @@ public class TakeAttendance extends AppCompatActivity
 
 
             if (uri != null) {
-                filePath = mStorageRef.child("Profile Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
+                filePath = mStorageRef.child("Profile Pictures").child(gauradNameFetch.toString()).child(uri.getLastPathSegment());
 
 
 
@@ -101,14 +107,14 @@ public class TakeAttendance extends AppCompatActivity
                 Log.v("NULL", "null uri");
             }
 
-            StorageReference ref = mStorageRef.child("Profile Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
+            StorageReference ref = mStorageRef.child("Profile Pictures").child(gauradNameFetch.toString()).child(uri.getLastPathSegment());
             ref.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                             mDatabase.child("profile " +
-                                    "pics").child(guardname.getText().toString()).push().setValue(taskSnapshot.getDownloadUrl().toString());
+                                    "pics").child(gauradNameFetch.toString()).push().setValue(taskSnapshot.getDownloadUrl().toString());
                             Picasso.get()
                                     .load(uri)
                                     .fit()
@@ -135,6 +141,7 @@ public class TakeAttendance extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
 
+
         map.put(0,"SUNDAY");
         map.put(1,"MONDAY");
         map.put(2,"TUESDAY");
@@ -154,7 +161,7 @@ public class TakeAttendance extends AppCompatActivity
         mStorageRef = FirebaseStorage.getInstance().getReference();
         UploadButton = (Button) findViewById(R.id.camera);
         picture = (ImageView) findViewById(R.id.imageView7);
-        guardname = (TextView) findViewById(R.id.gaurdname);
+        guardname = (TextView) findViewById(R.id.guardname2);
         mProgress = new ProgressDialog(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         UploadButton.setOnClickListener(new View.OnClickListener(){
@@ -167,12 +174,18 @@ public class TakeAttendance extends AppCompatActivity
             }
         });
 
+        TextView loc = (TextView)findViewById(R.id.textView3);
 
+        gg = (TextView)findViewById(R.id.guardname2);
+
+        phonenn = (TextView)findViewById(R.id.ph);
 
         /////
         Intent intent = getIntent();
         gauradNameFetch=intent.getStringExtra("gaurdname");
+        locNameFetch=intent.getStringExtra("location");
         mSubmit=findViewById(R.id.submitattendence);
+
 
 
 //        radioAttendenceGroup =(RadioGroup)findViewById(R.id.radioGroup_Attendence);
@@ -190,6 +203,11 @@ public class TakeAttendance extends AppCompatActivity
         Database = FirebaseDatabase.getInstance().getReference("Gaurdstest");
         Database2 = FirebaseDatabase.getInstance().getReference("weeklyReport");
         Database3 = FirebaseDatabase.getInstance().getReference("RoundCounter");
+
+        loc.setText(locNameFetch);
+        gg.setText(gauradNameFetch.replaceAll(","," "));
+
+
         s1 = map.get(todayday); //we will get the day name here
 
         mSubmit.setOnClickListener(new View.OnClickListener() {
@@ -372,6 +390,8 @@ if(count<10){
 
     void getFirebaseData()
     {
+        ProgressDialog progressDialog = new ProgressDialog(TakeAttendance.this);
+        progressDialog.show();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Gaurdstest").child("Numbers");
         int i = 1;
@@ -386,7 +406,13 @@ if(count<10){
 
 
                  if(nameTemp.equals(gauradNameFetch))
-                 {IntegerMapGaurd=dataSnapshot.getKey();
+                 {
+                     IntegerMapGaurd=dataSnapshot.getKey();
+
+
+                      Log.v("fuck yeah",g.getNumber());
+                     phonenn.setText(""+g.getNumber());
+
                      //Log.v("asd datasnap",dataSnapshot.getKey());
                      databaseReference2 = firebaseDatabase.getReference("Gaurdstest").child("Numbers")
                              .child(dataSnapshot.getKey()).child("attendence").child(String.valueOf(todayday));
@@ -469,7 +495,7 @@ if(count<10){
             }
         });
 
-
+    progressDialog.dismiss();
     }
     public Uri bitmapToUriConverter(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

@@ -11,16 +11,18 @@ public class GuardFromFirebase
 {
     private String name;
     private String DEFAULTS;
+    private String number;
 
 
     public GuardFromFirebase(String n)
     {
         name = n;
     }
-    public GuardFromFirebase(String n, String d)
+    public GuardFromFirebase(String n, String d,String nu)
     {
         name = n;
         DEFAULTS=d;
+        number = nu;
     }
 
     public GuardFromFirebase()
@@ -31,6 +33,10 @@ public class GuardFromFirebase
     public String getName()
     {
         return name;
+    }
+    public String getNumber()
+    {
+        return number;
     }
 
     public String getDEFAULTS()
