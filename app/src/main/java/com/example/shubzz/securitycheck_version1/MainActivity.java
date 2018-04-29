@@ -47,34 +47,22 @@ public class MainActivity extends AppCompatActivity {
 
     public Map<String, String> myMap = new HashMap<>();
     public int flag = 0;
-
-    private BroadcastReceiver broadcastReceiver;
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(broadcastReceiver == null){
-            broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-
-                    Log.d("asd",""+intent.getExtras().get("coordinates"));
-
-                }
-            };
-        }
-        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
-    }
+    /*
+    * code taken from tutorial and open source developer
+    * https://github.com/miskoajkula/GPS_service/blob/master/app/src/main/java/testing/gps_service/MainActivity.java
+    * https://www.youtube.com/watch?v=lvcGh2ZgHeA
+    * start here
+    * */
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(broadcastReceiver != null){
-            unregisterReceiver(broadcastReceiver);
-        }
+
     }
+
     private void enable_buttons() {
-
-
-
+        Log.d("asd","service started");
+        Intent i =new Intent(getApplicationContext(),GPS_Service.class);
+        startService(i);
     }
 
     private boolean runtime_permissions() {
@@ -97,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
+/*end here
+* */
 
 
 
@@ -121,18 +110,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //start gps service
-        Intent i =new Intent(getApplicationContext(),GPS_Service.class);
-        startService(i);
-//        Button bun = (Button) findViewById(R.id.bun);
-//        bun.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                Intent i = new Intent(MainActivity.this,TakeAttendance.class);
-//                startActivity(i);
-//            }
-//        });
+
+        if(!runtime_permissions()){
+            Log.d("asd","gotpermission");
+            enable_buttons();
+
+        }
 
         ImageView img2 = (ImageView) findViewById(R.id.imageView);
         img2.setOnClickListener(new View.OnClickListener()

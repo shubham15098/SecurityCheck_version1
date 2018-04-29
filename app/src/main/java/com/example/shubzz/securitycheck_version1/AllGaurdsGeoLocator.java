@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AllGaurdsGeo  extends FragmentActivity implements OnMapReadyCallback {
+public class AllGaurdsGeoLocator  extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private HashMap<String, Circle > mMarkers = new HashMap<>();
-    private HashMap<String, Marker > mMarkers2 = new HashMap<>();
+    private HashMap<String, Marker> mMarkers2 = new HashMap<>();
     private GoogleMap mMap;
     Circle circle;
     public Map<String, String> Latitude = new HashMap<>();
@@ -102,44 +102,9 @@ public class AllGaurdsGeo  extends FragmentActivity implements OnMapReadyCallbac
         Longitude.put("Phd Hostel","77.274041");
         Longitude.put("Faculty new","77.270151");
         databaseReference = firebaseDatabase.getReference("Areas");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                areas.clear();
-                areasSorted.clear();
-                goodAreas.clear();
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot uniqueKeySnapshot : snapshot.getChildren()) {
-                    Area a = uniqueKeySnapshot.getValue(Area.class);
-                    areas.add(a);
 
-                    Log.e("print ho rha h?",a.getAreaName());
-                }
-                Log.v("areas", String.valueOf(areas.size()));
-                int max;
-                //add areas of 0 defaults
-
-                for (int i=0;i<areas.size();i++)
-                    if(Integer.valueOf(areas.get(i).getAreaDefaults())==0)
-                        goodAreas.add(areas.get(i).getAreaName());
-                Log.d("asd",goodAreas.toString());
-                for (int i=0;i<areas.size();i++)
-                    if(Integer.valueOf(areas.get(i).getAreaDefaults())>0)
-                        badAreas.add(areas.get(i).getAreaName());
-                Log.d("asd",badAreas.toString());
-                setMarker();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        setContentView(R.layout.activity_all_gaurds_location);
-       SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        setContentView(R.layout.activity_all_gaurds_geo_locator);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapAll);
         mapFragment.getMapAsync(this);
     }
@@ -185,54 +150,11 @@ public class AllGaurdsGeo  extends FragmentActivity implements OnMapReadyCallbac
 
 
         for(String i : PositionStrings){
-            for(String j : goodAreas){
-                if(i.equals(j)){
-            LatLng location = new LatLng( Double.parseDouble(Latitude.get(i)), Double.parseDouble(Longitude.get(i)));
-            if (!mMarkers2.containsKey(i)&&!mMarkers.containsKey(i)) {
-                mMarkers.put(i, mMap.addCircle(new CircleOptions()
-                        .center(location)
-                        .radius(10)
-                        .strokeWidth(10)
-                        .strokeColor(Color.GREEN)
-                        .fillColor(Color.argb(128, 0, 255, 0))
-                        .clickable(true)));
-                mMarkers2.put(i, mMap.addMarker(new MarkerOptions().title(i).position(location)));
-                Log.d("asdgood",j);
-            }
-            else {
-                mMarkers2.get(i).setPosition(location);
-                mMarkers.get(i).setCenter(location);
-            }
-            }
+           //get hashmap values of gaurd on duty that time
+            // plot them
+
+
         }
-            for(String j : badAreas){
-                if(i.equals(j)){
-                    LatLng location = new LatLng( Double.parseDouble(Latitude.get(i)), Double.parseDouble(Longitude.get(i)));
-                    if (!mMarkers2.containsKey(i)&&!mMarkers.containsKey(i)) {
-                        mMarkers.put(i, mMap.addCircle(new CircleOptions()
-                                .center(location)
-                                .radius(10)
-                                .strokeWidth(10)
-                                .strokeColor(Color.RED)
-                                .fillColor(Color.argb(128, 255, 0, 0))
-                                .clickable(true)));
-                        mMarkers2.put(i, mMap.addMarker(new MarkerOptions().title(i).position(location)));
-                        Log.d("asdbad",j);
-                    }
-                    else {
-                        mMarkers2.get(i).setPosition(location);
-                        mMarkers.get(i).remove();
-                        mMarkers.put(i, mMap.addCircle(new CircleOptions()
-                                .center(location)
-                                .radius(10)
-                                .strokeWidth(10)
-                                .strokeColor(Color.RED)
-                                .fillColor(Color.argb(128, 255, 0, 0))
-                                .clickable(true)));
-                    }
-                }
-            }
-    }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Circle marker : mMarkers.values()) {
@@ -243,45 +165,6 @@ public class AllGaurdsGeo  extends FragmentActivity implements OnMapReadyCallbac
         }
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 300));
-    }
-
-    void getFirebaseData()
-    {
-        databaseReference = firebaseDatabase.getReference("Areas");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                areas.clear();
-                areasSorted.clear();
-                goodAreas.clear();
-                Log.e("Count " ,""+snapshot.getChildrenCount());
-                for (DataSnapshot uniqueKeySnapshot : snapshot.getChildren()) {
-                    Area a = uniqueKeySnapshot.getValue(Area.class);
-                    areas.add(a);
-
-                    Log.e("print ho rha h?",a.getAreaName());
-                }
-                Log.v("areas", String.valueOf(areas.size()));
-                int max;
-                //add areas of 0 defaults
-
-                for (int i=0;i<areas.size();i++)
-                    if(Integer.valueOf(areas.get(i).getAreaDefaults())==0)
-                        goodAreas.add(areas.get(i).getAreaName());
-                Log.d("asd",goodAreas.toString());
-                for (int i=0;i<areas.size();i++)
-                    if(Integer.valueOf(areas.get(i).getAreaDefaults())>0)
-                        badAreas.add(areas.get(i).getAreaName());
-                Log.d("asd",badAreas.toString());
-                setMarker();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
 
