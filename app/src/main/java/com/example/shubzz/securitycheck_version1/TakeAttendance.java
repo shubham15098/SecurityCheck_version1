@@ -1,19 +1,9 @@
 package com.example.shubzz.securitycheck_version1;
 
 import android.app.ProgressDialog;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,26 +12,57 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
+import java.util.HashMap;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
+
+// in submit clicked, if count == 10, send toast you have already done 10 interations
 public class TakeAttendance extends AppCompatActivity
 {
+    String gauradNameFetch;
+    int todayday;
+    int count;
+    Calendar calendar = Calendar.getInstance();
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    DatabaseReference databaseReference2;
+    Button mSubmit;
+    private RadioGroup radioAttendenceGroup;
+    private RadioButton radioAttendenceButton;
+    RadioGroup radioUniformGroup;
+    RadioButton radioUniformButton;
+    RadioGroup radioSleepGroup;
+    RadioButton radioSleepButton;
+   // RadioButton radioUniformButton;
+    String IntegerMapGaurd;
+    FirebaseAuth auth;
+    FirebaseUser user;
+    HashMap<Integer, String> map = new HashMap<Integer, String>();
+    String s1 = "";
     private StorageReference mStorageRef;
     private Button UploadButton;
     private ImageView picture;
@@ -51,35 +72,11 @@ public class TakeAttendance extends AppCompatActivity
     DatabaseReference mDatabase;
     TextView guardname;
     StorageReference filePath = null;
+    //////
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_take_attendance);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        UploadButton = (Button) findViewById(R.id.camera);
-        picture = (ImageView) findViewById(R.id.imageView7);
-        guardname = (TextView) findViewById(R.id.guardname);
-        mProgress = new ProgressDialog(this);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        UploadButton.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View view)
-            {
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(i , CAMERA_REQUEST_CODE);
-            }
-        });
-    }
 
-    public Uri bitmapToUriConverter(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -94,7 +91,7 @@ public class TakeAttendance extends AppCompatActivity
 
 
             if (uri != null) {
-                filePath = mStorageRef.child("Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
+                filePath = mStorageRef.child("Profile Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
 
 
 
@@ -104,13 +101,14 @@ public class TakeAttendance extends AppCompatActivity
                 Log.v("NULL", "null uri");
             }
 
-            StorageReference ref = mStorageRef.child("Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
+            StorageReference ref = mStorageRef.child("Profile Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
             ref.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            mDatabase.child("pics").child(guardname.getText().toString()).push().setValue(taskSnapshot.getDownloadUrl().toString());
+                            mDatabase.child("profile " +
+                                    "pics").child(guardname.getText().toString()).push().setValue(taskSnapshot.getDownloadUrl().toString());
                             Picasso.get()
                                     .load(uri)
                                     .fit()
@@ -129,84 +127,358 @@ public class TakeAttendance extends AppCompatActivity
 
                         }
                     });
-           /* filePath.putFile(uri).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
-            {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                {
-                    Uri x =filePath.getDownloadUrl().getResult();
-                    Log.d("asd", String.valueOf(x));
-                    mDatabase.child("pics").child(guardname.getText().toString()).push().setValue(x.toString());
 
-                    Picasso.get().load(taskSnapshot.getDownloadUrl()).fit().centerCrop().into(picture);
-                    mProgress.dismiss();
-                    Toast.makeText(TakeAttendance.this, "Uploading Finished" , Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    mProgress.dismiss();
-                    Toast.makeText(TakeAttendance.this, "Unsuccessful Uploading" , Toast.LENGTH_LONG).show();
-
-                }
-            });*/
         }
     }
-    public void onCheckboxClicked(View view)
+    //////////////////
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
 
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.checkedTextView:
-                if (checked)
-                // present
-                {Log.v("fuck","1");}
+        map.put(0,"SUNDAY");
+        map.put(1,"MONDAY");
+        map.put(2,"TUESDAY");
+        map.put(3,"WEDNESDAY");
+        map.put(4,"THURSDAY");
+        map.put(5,"FRIDAY");
+        map.put(6,"SATURDAY");
 
-                else
-                // Remove the meat
-                {Log.v("fuck","-1");}
-                break;
-            case R.id.checkedTextView2:
-                if (checked)
-                // Cheese me
-                {
-                    Log.v("fuck","2");
-                    DatabaseReference mDatabase;
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
+        count = 10;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_take_attendance);
 
-                    mDatabase.child("Guards").child("Mohan").child("attendance").setValue(4);
+
+        ////
+
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        UploadButton = (Button) findViewById(R.id.camera);
+        picture = (ImageView) findViewById(R.id.imageView7);
+        guardname = (TextView) findViewById(R.id.gaurdname);
+        mProgress = new ProgressDialog(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        UploadButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(i , CAMERA_REQUEST_CODE);
+            }
+        });
+
+
+
+        /////
+        Intent intent = getIntent();
+        gauradNameFetch=intent.getStringExtra("gaurdname");
+        mSubmit=findViewById(R.id.submitattendence);
+
+
+//        radioAttendenceGroup =(RadioGroup)findViewById(R.id.radioGroup_Attendence);
+//        radioSleepGroup=(RadioGroup)findViewById(R.id.radioGroup_sleep);
+//        radioUniformGroup=(RadioGroup)findViewById(R.id.radioGroup_Uniform);
+
+        todayday = calendar.get(Calendar.DAY_OF_WEEK); // sunday == 1
+        todayday = todayday - 1;
+
+        getFirebaseData();
+        final DatabaseReference Database;
+        final DatabaseReference Database2;
+        final DatabaseReference Database3;
+
+        Database = FirebaseDatabase.getInstance().getReference("Gaurdstest");
+        Database2 = FirebaseDatabase.getInstance().getReference("weeklyReport");
+        Database3 = FirebaseDatabase.getInstance().getReference("RoundCounter");
+        s1 = map.get(todayday); //we will get the day name here
+
+        mSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String temp1 = "";
+                String temp2 = "";
+                String temp3 = "";
+
+                String temp11 = "";
+                String temp22 = "";
+                String temp33 = "";
+
+                temp2 = temp2.concat(s1);
+                temp2 = temp2.concat(": ");
+
+                temp3 = temp3.concat(s1);
+                temp3 = temp3.concat(": ");
+
+
+                temp1 = temp1.concat(s1);
+                temp1 = temp1.concat(": ");
+
+//                int selectedId1= radioAttendenceGroup.getCheckedRadioButtonId();
+//                int selectedId2=radioUniformGroup.getCheckedRadioButtonId();
+//                int selectedId3=radioSleepGroup.getCheckedRadioButtonId();
+
+
+                RadioButton radioPresent = (RadioButton) findViewById(R.id.radioButton);
+                RadioButton radioAbsent = (RadioButton) findViewById(R.id.radioButton2);
+                RadioButton radioNoUniform = (RadioButton) findViewById(R.id.radioButton2_uniform2);
+                RadioButton radioUniform = (RadioButton) findViewById(R.id.radioButton_uniform1);
+
+
+                RadioButton radioSleep = (RadioButton) findViewById(R.id.radioButton3_sleep2);
+                RadioButton radioNoSleep = (RadioButton) findViewById(R.id.radioButton3_sleep1);
+
+
+//                Toast.makeText(TakeAttendance.this, radioAttendenceButton.getText(), Toast.LENGTH_SHORT).show();
+if(count<10){
+                if ((radioNoSleep.isChecked() == true || radioSleep.isChecked() == true) && (radioAbsent.isChecked() == true || radioPresent.isChecked() == true)
+                        && (radioNoUniform.isChecked() == true || radioUniform.isChecked() == true)) {
+                    if (radioPresent.isChecked() == true) {
+                        Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(1);
+                        Log.d("asd", "present");
+                        Log.d("asdmap", IntegerMapGaurd);
+                        Log.d("asdcount", Integer.toString(count));
+                    } else if (radioAbsent.isChecked() == true) {
+                        Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
+                        Log.d("asd", "absent");
+                        temp1 = temp1.concat(gauradNameFetch + " was absent!!!");
+                        temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
+                        Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp1);
+                        Database2.child(String.valueOf(todayday)).push().setValue(temp11);
+                    }
+//                    else
+//                        Toast.makeText(TakeAttendance.this,"please select any one", Toast.LENGTH_SHORT).show();
+
+                    if (radioNoSleep.isChecked() == true) {
+                        Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(1);
+                        Log.d("asd", "Awake");
+                        Log.d("asdmap", IntegerMapGaurd);
+                        Log.d("asdcount", Integer.toString(count));
+                        Toast.makeText(TakeAttendance.this, "awake", Toast.LENGTH_SHORT).show();
+
+                    } else if (radioSleep.isChecked() == true) {
+                        Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
+                        Log.d("asd", "absent");
+                        Toast.makeText(TakeAttendance.this, "sleeping", Toast.LENGTH_SHORT).show();
+                        temp2 = temp2.concat(gauradNameFetch + " was sleeping!!!");
+                        temp22 = temp22.concat(gauradNameFetch + " was sleeping!!!");
+                        Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
+                        Database2.child(String.valueOf(todayday)).push().setValue(temp22);
+
+                    }
+//                    else
+//                        Toast.makeText(TakeAttendance.this,"please select any one on sleeping", Toast.LENGTH_SHORT).show();
+
+
+                    if (radioUniform.isChecked() == true) {
+                        if (count == 0) {
+                            Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(1);
+                            Log.d("asd", "Awake");
+                            Log.d("asdmap", IntegerMapGaurd);
+                            Log.d("asdcount", Integer.toString(count));
+                            Toast.makeText(TakeAttendance.this, "proper", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else if (radioNoUniform.isChecked() == true) {
+                        if (count == 0) {
+                            Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(0);
+                            Log.d("asd", "No Proper Uniform");
+                            Toast.makeText(TakeAttendance.this, "No Proper Uniform", Toast.LENGTH_SHORT).show();
+                            temp3 = temp3.concat(gauradNameFetch + " was not in proper uniform!!!");
+                            temp33 = temp33.concat(gauradNameFetch + " was not in proper uniform!!!");
+                            Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
+                            Database2.child(String.valueOf(todayday)).push().setValue(temp33);
+
+                        }
+                    }
+                    Database3.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            walkClass w = dataSnapshot.getValue(walkClass.class);
+                            Log.d("asd", Integer.toString(w.getCounter()));
+
+                            Database3.child("1").child("counter").setValue(w.getCounter() + 1);
+
+                            if (w.getCounter() + 1 > 20) {
+                                // one walk is completed
+                                Database3.child("1").child("counter").setValue(0);
+                                Database3.child("1").child("walk").setValue((w.getWalk()) + 1);
+                            }
+
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    new SweetAlertDialog(TakeAttendance.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("marked")
+                            .setContentText("")
+                            .setConfirmText("OK!")
+
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.dismissWithAnimation();
+                                    finish();
+                                }
+                            })
+                            .show();
+                    // supervisor
+
+
+
+                } else {
+                    Toast.makeText(TakeAttendance.this, "PLEASE CHECK ALL THE OPTIONS", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {Log.v("fuck","-2");
-                DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                mDatabase.child("Guards").child("Mohan").child("attendance").setValue(3);}
-                // I'm lactose intolerant
-                break;
-            // TODO: Veggie sandwich
-
-            case R.id.checkedTextView3:
-                if (checked)
-                {
-                    Log.v("fuck","3");
-                    DatabaseReference mDatabase;
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-
-                    mDatabase.child("Guards").child("Mohan").child("uniform").setValue(3);
+            }
+            else{
+    new SweetAlertDialog(TakeAttendance.this, SweetAlertDialog.SUCCESS_TYPE)
+            .setTitleText("Already marked")
+            .setContentText("this place is already marked")
+            .setConfirmText("OK!")
+            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sDialog) {
+                    sDialog.dismissWithAnimation();
+                    finish();
                 }
-                // Cheese me
-                else
-            { Log.v("fuck","-3");
-                DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-
-                mDatabase.child("Guards").child("Mohan").child("uniform").setValue(2);}
-                // I'm lactose intolerant
-                break;
+            })
+            .show();
         }
+
+            }
+        });
+
+
     }
+
+    void getFirebaseData()
+    {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Gaurdstest").child("Numbers");
+        int i = 1;
+        databaseReference.addChildEventListener(new ChildEventListener()
+
+        {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                 GuardFromFirebase g = dataSnapshot.getValue(GuardFromFirebase.class);
+                 String nameTemp = g.getName();
+
+
+                 if(nameTemp.equals(gauradNameFetch))
+                 {IntegerMapGaurd=dataSnapshot.getKey();
+                     //Log.v("asd datasnap",dataSnapshot.getKey());
+                     databaseReference2 = firebaseDatabase.getReference("Gaurdstest").child("Numbers")
+                             .child(dataSnapshot.getKey()).child("attendence").child(String.valueOf(todayday));
+
+
+                     databaseReference2.addChildEventListener(new ChildEventListener()
+
+                     {
+                         @Override
+                         public void onChildAdded(DataSnapshot dataSnapshot2, String s2)
+                         {
+
+                            String s = dataSnapshot2.getValue().toString();
+                            if(s.equals("-1"))
+                            {
+                                // here specify count
+                                if(count == 10)
+                                {
+                                    count = Integer.parseInt(dataSnapshot2.getKey());
+
+                                }
+
+
+                            }
+                             Log.v("asd",String.valueOf(count));
+                         }
+
+                         @Override
+                         public void onChildChanged(DataSnapshot dataSnapshot2, String s2)
+                         {
+
+
+                         }
+
+                         @Override
+                         public void onChildRemoved(DataSnapshot dataSnapshot2) {
+
+                         }
+
+                         @Override
+                         public void onChildMoved(DataSnapshot dataSnapshot2, String s2) {
+
+                         }
+
+                         @Override
+                         public void onCancelled(DatabaseError databaseError2)
+                         {
+
+                         }
+                     });
+
+
+                     //Log.v("asd","lodu");
+                 }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+                // i think empty the list here and refill it i.e. copy the above code
+                //getFirebaseData();
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+
+    }
+    public Uri bitmapToUriConverter(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    /*class support{
+
+    }*/
 }

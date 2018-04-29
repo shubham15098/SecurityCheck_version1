@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-       /* ImageView img2 = (ImageView) findViewById(R.id.imageView);
+        ImageView img2 = (ImageView) findViewById(R.id.imageView);
         img2.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 else if(flag == 1)
                 {
                     Intent i = new Intent(MainActivity.this,TakeAttendance.class);
+                    i.putExtra("gaurdname","Lavjee Singh");
                     startActivity(i);
                 }
 
@@ -197,11 +198,11 @@ public class MainActivity extends AppCompatActivity {
                                 if (myMap.containsKey(xyz))
                                 {
                                     //here i am connected
-                                   flag = 1;
-                                   t.setText(location);
-                                   t2.setText("CONNECTED");
-                                   t3.setText("GOOD JOB");
-                                   img.setImageResource(R.drawable.ellipse1);
+                                    flag = 1;
+                                    t.setText(location);
+                                    t2.setText("CONNECTED");
+                                    t3.setText("GOOD JOB");
+                                    img.setImageResource(R.drawable.ellipse1);
 
                                 }
                                 else
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-*/
+
 
 
     }

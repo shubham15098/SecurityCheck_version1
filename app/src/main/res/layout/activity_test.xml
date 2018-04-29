@@ -4,18 +4,91 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/profilephoto"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:text="NAME: " />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="name"
+                android:textColor="#000000"
+                android:textSize="30dp"
+                android:layout_marginLeft="120dp"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:text="No of Defaults: " />
+
+            <TextView
+                android:id="@+id/defaults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="XX"
+                android:textColor="#000000"
+                android:textSize="30dp"
+                android:layout_marginLeft="240dp"/>
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:fontFamily="serif"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:text="Defaults: " />
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/listview">
+
+        </ListView>
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentTop="true" />
+            android:layout_height="250dp"
+            android:layout_alignParentBottom="true" />
         <me.relex.circleindicator.CircleIndicator
             android:id="@+id/indicator"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

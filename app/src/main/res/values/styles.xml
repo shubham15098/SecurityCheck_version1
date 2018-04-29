@@ -24,4 +24,18 @@
 
     </style>
 
+    <style name="myTextHeading">
+        <!-- Customize your theme here. -->
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blueBun</item>
+    </style>
+
+    <style name="myText">
+        <!-- Customize your theme here. -->
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#191919</item>
+    </style>
+
 </resources>

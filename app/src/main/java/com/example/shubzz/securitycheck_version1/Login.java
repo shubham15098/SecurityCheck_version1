@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,11 +42,13 @@ public static int RC_SIGN_IN=1;
             SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
             String userType=pref.getString("user_type", "supervisor");
             if (userType.equals("arun")){
-                Intent i = new Intent(Login.this,Arun.class);
+                Intent i = new Intent(Login.this,Home_Manager.class);
                 startActivity(i);
+                finish();
             }else if(userType.equals("supervisor")){
-                Intent i = new Intent(Login.this,Supervisor.class);
+                Intent i = new Intent(Login.this,MainActivity.class);
                 startActivity(i);
+                finish();
             }else {
                 startActivityForResult(
                         AuthUI.getInstance()
@@ -96,16 +99,18 @@ public static int RC_SIGN_IN=1;
                             Log.d("role pro" , "teacer");
                             editor.putString("user_type", "arun");
                             editor.commit();
-                            Intent i = new Intent(Login.this, Arun.class);
+                            Intent i = new Intent(Login.this, Home_Manager.class);
                             p.dismiss();
                             startActivity(i);
+                            finish();
                         }
                         else if (changedPost.contains("authority")&&changedPost.contains("no")){
                             Log.d("role pro" , "supervisor");
                             editor.putString("user_type", "supervisor");
                             editor.commit();
-                            Intent i = new Intent(Login.this, Supervisor.class);
+                            Intent i = new Intent(Login.this, MainActivity.class);
                             startActivity(i);
+                            finish();
                         }
                     }
 
@@ -143,6 +148,36 @@ public static int RC_SIGN_IN=1;
 
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                   //  showSnackbar(R.string.no_internet_connection);
+                    new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Ooops..")
+                            .setContentText("Cant connect to internet!")
+                            .setConfirmText("Yes,turn on wifi")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.dismissWithAnimation();
+                                    WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                                    wifi.setWifiEnabled(true);
+                                    startActivityForResult(
+                                            AuthUI.getInstance()
+                                                    .createSignInIntentBuilder()
+                                                    .setTheme(R.style.FirebaseUI)
+                                                    .setAvailableProviders(Arrays.asList(
+                                                            new AuthUI.IdpConfig.EmailBuilder().build(),
+                                                            new AuthUI.IdpConfig.PhoneBuilder().build(),
+                                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                                    .build(),
+                                            RC_SIGN_IN);
+                                }
+                            })
+                            .setCancelButton("Some other time", new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.dismissWithAnimation();
+                                    finish();
+                                }
+                            })
+                            .show();
                     return;
                 }
 

@@ -2,6 +2,7 @@ package com.example.shubzz.securitycheck_version1;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,10 +29,14 @@ import java.util.ArrayList;
 public class GuardsName extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
-    ArrayList<Guard> guards;
+    ArrayList<GuardFromFirebase> guards;
+    ArrayList<GuardFromFirebase> guardsSorted;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     recyler_adapter_guards_name adapter;
+    ArrayList<String> goodGuards;
+
+  
     
 
     @Override
@@ -44,28 +50,64 @@ public class GuardsName extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         
         guards = new ArrayList<>();
-        adapter = new GuardsName.recyler_adapter_guards_name(guards);
+        guardsSorted = new ArrayList<>();
+        goodGuards = new ArrayList<>();
+        adapter = new GuardsName.recyler_adapter_guards_name(guardsSorted);
         firebaseDatabase = FirebaseDatabase.getInstance();
         mRecyclerView.setAdapter(adapter);
-
+   
         getFirebaseData();
+        
     }
 
     void getFirebaseData()
     {
-        databaseReference = firebaseDatabase.getReference("GuardsContacts").child("Numbers");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Gaurdstest").child("Numbers");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 guards.clear();
+                guardsSorted.clear();
+                goodGuards.clear();
+                Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot uniqueKeySnapshot : snapshot.getChildren()) {
-                    Guard g = new Guard("","");
-                        String key = (String) snapshot.getKey();
-                        String value = (String) snapshot.getValue();
-                        if (key.equals("name")) g.setName(value);
-                        if (key.equals("number")) g.setNumber(value);
-                        guards.add(g);
+                    GuardFromFirebase a = uniqueKeySnapshot.getValue(GuardFromFirebase.class);
+                    guards.add(a);
+                    mRecyclerView.setAdapter(adapter);
+                    Log.e("print ho rha h?",a.getName());
                 }
+                Log.v("areas", String.valueOf(guards.size()));
+                int max;
+                //add guards of 0 defaults
+
+                for (int i=0;i<guards.size();i++)
+                    if(Integer.valueOf(guards.get(i).getDEFAULTS())==0)
+                        goodGuards.add(guards.get(i).getName());
+
+
+                while(guardsSorted.size()!=guards.size())
+                {
+                    GuardFromFirebase temp = new GuardFromFirebase();
+                    int pos=0;
+                    max =-1;
+                    for( int i=0;i<guards.size();i++)
+                    {
+
+                        if (Integer.valueOf(guards.get(i).getDEFAULTS()) >= max)
+                        {
+                            temp = guards.get(i);
+                            max = Integer.valueOf(guards.get(i).getDEFAULTS());
+                            pos=i;
+                        }
+                    }
+                    guardsSorted.add(temp);
+                    Log.e("guards Sorted", temp.getDEFAULTS());
+                    guards.get(pos).setDEFAULTS("-1");
+                    Log.e("size sorted", String.valueOf(guardsSorted.size()));
+                    //mRecyclerView.setAdapter(adapter);
+                }
+
             }
 
             @Override
@@ -78,9 +120,9 @@ public class GuardsName extends AppCompatActivity {
     }
 
     public class recyler_adapter_guards_name extends RecyclerView.Adapter<GuardsName.recyler_adapter_guards_name.MyViewHolder> {
-        ArrayList<Guard> guards;
+        ArrayList<GuardFromFirebase> guards;
 
-        public recyler_adapter_guards_name(ArrayList<Guard> guards) {
+        public recyler_adapter_guards_name(ArrayList<GuardFromFirebase> guards) {
             this.guards = guards;
         }
 
@@ -94,6 +136,20 @@ public class GuardsName extends AppCompatActivity {
         @Override
         public void onBindViewHolder(GuardsName.recyler_adapter_guards_name.MyViewHolder holder, int position) {
             holder.guardName.setText(guards.get(position).getName());
+            Log.e("good Guards", String.valueOf(goodGuards.size()));
+            if(goodGuards.contains(guards.get(position).getName()))
+            {
+                holder.itemView.setBackgroundColor(Color.GREEN);
+                holder.guardName.setBackgroundColor(Color.GREEN);
+
+            }
+            else
+            {
+                holder.itemView.setBackgroundColor(Color.RED);
+                holder.guardName.setBackgroundColor(Color.RED);
+            }
+
+
         }
 
         @Override
@@ -106,16 +162,30 @@ public class GuardsName extends AppCompatActivity {
 
             public MyViewHolder(View itemView) {
                 super(itemView);
+                itemView.setOnClickListener(this);
                 guardName = (TextView) itemView.findViewById(R.id.guard_name);
+
 
               
             }
 
             @Override
             public void onClick(View view) {
-                Intent i = new Intent (getApplicationContext(),GuardProfileActivity.class);
-                i.putExtra("Position",getAdapterPosition());
+                Log.v("Clicked",guards.get(getAdapterPosition()).getName());
+
+
+
+                Intent i = new Intent (getApplicationContext(),ImageSlider.class);
+                i.putExtra("NAME",guards.get(getAdapterPosition()).getName());
+                String Color ="Red";
+                if(goodGuards.contains(guards.get(getAdapterPosition()).getName()))
+                    Color="Green";
+                i.putExtra("COLOR",Color);
+                i.putExtra("DEFAULTS",guards.get(getAdapterPosition()).getDEFAULTS() );
+                ArrayList<String> remarks = new ArrayList<>();
+//                i.putStringArrayListExtra("REMARKS",teams);
                 startActivity(i);
+
             }
         }
     }
