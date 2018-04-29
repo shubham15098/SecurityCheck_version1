@@ -33,12 +33,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="NAME"
+                android:text="NAME: "
                 style="@style/myTextHeading"/>
 
 
             <TextView
-                android:id="@+id/gaurdname"
+                android:id="@+id/guardname2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -61,7 +61,7 @@
                 style="@style/myTextHeading"/>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/ph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:text="LOCATION"
+                android:text="LOCATION: "
                 style="@style/myTextHeading"/>
 
             <TextView
