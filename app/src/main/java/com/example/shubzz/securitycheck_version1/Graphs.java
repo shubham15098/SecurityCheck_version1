@@ -61,22 +61,27 @@ public class Graphs extends AppCompatActivity {
         areas.setDrawHoleEnabled(false);
 
         ArrayList<BarEntry> Barentry = new ArrayList<>();
-        Barentry.add(new BarEntry(2f, 0));
-        Barentry.add(new BarEntry(4f, 1));
-        Barentry.add(new BarEntry(6f, 2));
+        Barentry.add(new BarEntry(62.35f, 0));
+        Barentry.add(new BarEntry(7.26f, 1));
+        Barentry.add(new BarEntry(30.3f, 2));
 
         BarDataSet dataSet3 = new BarDataSet(Barentry, "Defaults");
         ArrayList<String> labels = new ArrayList<>();
         labels.add("Attendance");
         labels.add("Uniform");
         labels.add("Sleeping");
+
         BarData data3 = new BarData(labels, dataSet3);
+        data3.setGroupSpace(0.5f);
+        dataSet3.setBarSpacePercent(50f);
         dataSet3.setColors(ColorTemplate.COLORFUL_COLORS);
         bar.setData(data3);
         bar.getXAxis().setEnabled(false);
 //        bar.getYAxis().setEnabled(false);
         bar.getAxisLeft().setDrawAxisLine(false);
         bar.getAxisRight().setDrawAxisLine(false);
-
+        bar.getAxisRight().setEnabled(false);
+        bar.getXAxis().setDrawLabels(true);
+//        bar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xVals));
     }
 }

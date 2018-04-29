@@ -12,18 +12,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barchart"
-                android:layout_width="match_parent"
-                android:layout_height="200dp" />
+<com.github.mikephil.charting.charts.BarChart
+    android:id="@+id/barchart"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:layout_weight="0.5"
+    android:layout_margin="10dp"
+
+                />
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/guardspiechart"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="300dp"
+        android:layout_margin="10dp"/>
     <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/areaspiechart"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"/>
+                android:layout_height="300dp"
+        android:layout_margin="10dp"/>
 
 
         </LinearLayout>

@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
@@ -28,12 +27,26 @@
         <activity
             android:name=".Home_Manager"
             android:label="@string/title_activity_home__manager"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
+
         <activity android:name=".GuardsName">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity android:name=".ImageSlider" />
-        <activity android:name=".AreasActivity" />
+        <activity android:name=".AreasActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".GuardProfileActivity" />
         <activity android:name=".StarOfTheWeek">
 
@@ -42,11 +55,7 @@
 
         </activity>
         <activity android:name=".Login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Splashscreen"/>
         <activity android:name=".Supervisor"/>
