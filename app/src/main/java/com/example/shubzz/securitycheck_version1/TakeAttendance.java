@@ -91,7 +91,7 @@ public class TakeAttendance extends AppCompatActivity
 
 
             if (uri != null) {
-                filePath = mStorageRef.child("Profile Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
+                filePath = mStorageRef.child("Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
 
 
 
@@ -101,13 +101,13 @@ public class TakeAttendance extends AppCompatActivity
                 Log.v("NULL", "null uri");
             }
 
-            StorageReference ref = mStorageRef.child("Profile Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
+            StorageReference ref = mStorageRef.child("Pictures").child(guardname.getText().toString()).child(uri.getLastPathSegment());
             ref.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            mDatabase.child("profile " +
+                            mDatabase.child(
                                     "pics").child(guardname.getText().toString()).push().setValue(taskSnapshot.getDownloadUrl().toString());
                             Picasso.get()
                                     .load(uri)
