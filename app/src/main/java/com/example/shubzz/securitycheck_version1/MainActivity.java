@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements
                                 {
                                     xyz = xyz.substring(0, xyz.length() - 1);
 
-                                    String location = myMap.get(xyz);
+                                    location = myMap.get(xyz);
 
 
                                     if (myMap.containsKey(xyz))
@@ -399,6 +399,11 @@ public class MainActivity extends AppCompatActivity implements
                 guardA.put(g.getPOST(),g.getGAURD1());
                 guardB.put(g.getPOST(),g.getGaurd2());
                 guardC.put(g.getPOST(),g.getGAURD3());
+
+                if(g.getPOST().equals("New acad(2nd Floor)"))
+                {
+                    Log.v("qwerty",g.getGAURD3());
+                }
             }
 
             @Override
@@ -476,9 +481,9 @@ public class MainActivity extends AppCompatActivity implements
         {
 
 
-            Toast.makeText(this,"Clicked",
-                    Toast.LENGTH_SHORT
-            ).show();
+//            Toast.makeText(this,"Clicked",
+//                    Toast.LENGTH_SHORT
+//            ).show();
             // clicking this button is very imp
             // it will config everything, i guess in our code we will have to do this in main or something
             if (!mGoogleApiClient.isConnected())
@@ -507,9 +512,9 @@ public class MainActivity extends AppCompatActivity implements
         else if(flag == 1)
         {
 
-            Toast.makeText(this,"Clicked",
-                    Toast.LENGTH_SHORT
-            ).show();
+//            Toast.makeText(this,"Clicked",
+//                    Toast.LENGTH_SHORT
+//            ).show();
             // clicking this button is very imp
             // it will config everything, i guess in our code we will have to do this in main or something
             if (!mGoogleApiClient.isConnected())
@@ -548,6 +553,7 @@ public class MainActivity extends AppCompatActivity implements
                 {
                     Log.v("fuck","inside");
                     guardName = guardC.get(location);
+                    Log.v("fuck",guardName);
                 }
                 else if(time >= 8 && time < 16)
                 {
@@ -560,10 +566,12 @@ public class MainActivity extends AppCompatActivity implements
 
                 //Log.v("fuck",guardName);
 
-//                Intent i = new Intent(MainActivity.this,TakeAttendance.class);
-//                i.putExtra("gaurdname",guardName);
-//                i.putExtra("location",location);
-//                startActivity(i);
+
+
+                Intent i = new Intent(MainActivity.this,TakeAttendance.class);
+                i.putExtra("gaurdname",guardName);
+                i.putExtra("location",location);
+                startActivity(i);
         }
     }
 
@@ -596,11 +604,11 @@ public class MainActivity extends AppCompatActivity implements
         // comment it i guess, else it every time give a toast message
 
         if (status.isSuccess()) {
-            Toast.makeText(
-                    this,
-                    "Geofences Added",
-                    Toast.LENGTH_SHORT
-            ).show();
+//            Toast.makeText(
+//                    this,
+//                    "Geofences Added",
+//                    Toast.LENGTH_SHORT
+//            ).show();
         } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(this,

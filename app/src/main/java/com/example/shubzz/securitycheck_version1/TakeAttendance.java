@@ -36,12 +36,13 @@ import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
+import java.sql.Timestamp;
 // in submit clicked, if count == 10, send toast you have already done 10 interations
 public class TakeAttendance extends AppCompatActivity
 {
@@ -77,6 +78,9 @@ public class TakeAttendance extends AppCompatActivity
     TextView guardname;
     StorageReference filePath = null;
     String phoneNumber="9999";
+    private long lastChecked;
+    String key;
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     //////
 
 
@@ -140,6 +144,7 @@ public class TakeAttendance extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        // getting time in hour
 
 
         map.put(0,"SUNDAY");
@@ -210,177 +215,204 @@ public class TakeAttendance extends AppCompatActivity
 
         s1 = map.get(todayday); //we will get the day name here
 
-        mSubmit.setOnClickListener(new View.OnClickListener() {
+        mSubmit.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
-                String temp1 = "";
-                String temp2 = "";
-                String temp3 = "";
-
-                String temp11 = "";
-                String temp22 = "";
-                String temp33 = "";
-
-                temp2 = temp2.concat(s1);
-                temp2 = temp2.concat(": ");
-
-                temp3 = temp3.concat(s1);
-                temp3 = temp3.concat(": ");
+            public void onClick(View view)
+            {
 
 
-                temp1 = temp1.concat(s1);
-                temp1 = temp1.concat(": ");
+                long micro = timestamp.getTime()-lastChecked;
+
+                if(lastChecked == 100 || micro >= (2*60000))
+                {
+                    String temp1 = "";
+                    String temp2 = "";
+                    String temp3 = "";
+
+                    String temp11 = "";
+                    String temp22 = "";
+                    String temp33 = "";
+
+                    temp2 = temp2.concat(s1);
+                    temp2 = temp2.concat(": ");
+
+                    temp3 = temp3.concat(s1);
+                    temp3 = temp3.concat(": ");
+
+
+                    temp1 = temp1.concat(s1);
+                    temp1 = temp1.concat(": ");
 
 //                int selectedId1= radioAttendenceGroup.getCheckedRadioButtonId();
 //                int selectedId2=radioUniformGroup.getCheckedRadioButtonId();
 //                int selectedId3=radioSleepGroup.getCheckedRadioButtonId();
 
 
-                RadioButton radioPresent = (RadioButton) findViewById(R.id.radioButton);
-                RadioButton radioAbsent = (RadioButton) findViewById(R.id.radioButton2);
-                RadioButton radioNoUniform = (RadioButton) findViewById(R.id.radioButton2_uniform2);
-                RadioButton radioUniform = (RadioButton) findViewById(R.id.radioButton_uniform1);
+                    RadioButton radioPresent = (RadioButton) findViewById(R.id.radioButton);
+                    RadioButton radioAbsent = (RadioButton) findViewById(R.id.radioButton2);
+                    RadioButton radioNoUniform = (RadioButton) findViewById(R.id.radioButton2_uniform2);
+                    RadioButton radioUniform = (RadioButton) findViewById(R.id.radioButton_uniform1);
 
 
-                RadioButton radioSleep = (RadioButton) findViewById(R.id.radioButton3_sleep2);
-                RadioButton radioNoSleep = (RadioButton) findViewById(R.id.radioButton3_sleep1);
+                    RadioButton radioSleep = (RadioButton) findViewById(R.id.radioButton3_sleep2);
+                    RadioButton radioNoSleep = (RadioButton) findViewById(R.id.radioButton3_sleep1);
 
 
 //                Toast.makeText(TakeAttendance.this, radioAttendenceButton.getText(), Toast.LENGTH_SHORT).show();
-if(count<10){
-                if ((radioNoSleep.isChecked() == true || radioSleep.isChecked() == true) && (radioAbsent.isChecked() == true || radioPresent.isChecked() == true)
-                        && (radioNoUniform.isChecked() == true || radioUniform.isChecked() == true)) {
-                    if (radioPresent.isChecked() == true) {
-                        Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(1);
-                        Log.d("asd", "present");
-                        Log.d("asdmap", IntegerMapGaurd);
-                        Log.d("asdcount", Integer.toString(count));
-                    } else if (radioAbsent.isChecked() == true) {
-                        Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
-                        Log.d("asd", "absent");
-                        temp1 = temp1.concat(gauradNameFetch + " was absent!!!");
-                        temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
-                        Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp1);
-                        Database2.child(String.valueOf(todayday)).push().setValue(temp11);
-                    }
+                    if(count<10){
+                        if ((radioNoSleep.isChecked() == true || radioSleep.isChecked() == true) && (radioAbsent.isChecked() == true || radioPresent.isChecked() == true)
+                                && (radioNoUniform.isChecked() == true || radioUniform.isChecked() == true)) {
+
+                            // write the current time stamp
+                            firebaseDatabase.getReference("Gaurdstest").child("Numbers")
+                                    .child(key).child("timestamp").child(String.valueOf(todayday))
+                                    .setValue(String.valueOf(timestamp.getTime()));
+
+                            if (radioPresent.isChecked() == true) {
+                                Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(1);
+                                Log.d("asd", "present");
+                                Log.d("asdmap", IntegerMapGaurd);
+                                Log.d("asdcount", Integer.toString(count));
+                            } else if (radioAbsent.isChecked() == true) {
+                                Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
+                                Log.d("asd", "absent");
+                                temp1 = temp1.concat(gauradNameFetch + " was absent!!!");
+                                temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
+                                Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp1);
+                                Database2.child(String.valueOf(todayday)).push().setValue(temp11);
+                            }
 //                    else
 //                        Toast.makeText(TakeAttendance.this,"please select any one", Toast.LENGTH_SHORT).show();
 
-                    if (radioNoSleep.isChecked() == true) {
-                        Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(1);
-                        Log.d("asd", "Awake");
-                        Log.d("asdmap", IntegerMapGaurd);
-                        Log.d("asdcount", Integer.toString(count));
-                        Toast.makeText(TakeAttendance.this, "awake", Toast.LENGTH_SHORT).show();
+                            if (radioNoSleep.isChecked() == true) {
+                                Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(1);
+                                Log.d("asd", "Awake");
+                                Log.d("asdmap", IntegerMapGaurd);
+                                Log.d("asdcount", Integer.toString(count));
+                                //Toast.makeText(TakeAttendance.this, "awake", Toast.LENGTH_SHORT).show();
 
-                    } else if (radioSleep.isChecked() == true) {
-                        Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
-                        Log.d("asd", "absent");
-                        Toast.makeText(TakeAttendance.this, "sleeping", Toast.LENGTH_SHORT).show();
-                        temp2 = temp2.concat(gauradNameFetch + " was sleeping!!!");
-                        temp22 = temp22.concat(gauradNameFetch + " was sleeping!!!");
-                        Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
-                        Database2.child(String.valueOf(todayday)).push().setValue(temp22);
+                            } else if (radioSleep.isChecked() == true) {
+                                Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
+                                Log.d("asd", "absent");
+                                //Toast.makeText(TakeAttendance.this, "sleeping", Toast.LENGTH_SHORT).show();
+                                temp2 = temp2.concat(gauradNameFetch + " was sleeping!!!");
+                                temp22 = temp22.concat(gauradNameFetch + " was sleeping!!!");
+                                Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
+                                Database2.child(String.valueOf(todayday)).push().setValue(temp22);
 
-                    }
+                            }
 //                    else
 //                        Toast.makeText(TakeAttendance.this,"please select any one on sleeping", Toast.LENGTH_SHORT).show();
 
 
-                    if (radioUniform.isChecked() == true) {
-                        if (count == 0) {
-                            Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(1);
-                            Log.d("asd", "Awake");
-                            Log.d("asdmap", IntegerMapGaurd);
-                            Log.d("asdcount", Integer.toString(count));
-                            Toast.makeText(TakeAttendance.this, "proper", Toast.LENGTH_SHORT).show();
+                            if (radioUniform.isChecked() == true) {
+                                if (count == 0) {
+                                    Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(1);
+                                    Log.d("asd", "Awake");
+                                    Log.d("asdmap", IntegerMapGaurd);
+                                    Log.d("asdcount", Integer.toString(count));
+                                    //Toast.makeText(TakeAttendance.this, "proper", Toast.LENGTH_SHORT).show();
 
-                        }
-                    } else if (radioNoUniform.isChecked() == true) {
-                        if (count == 0) {
-                            Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(0);
-                            Log.d("asd", "No Proper Uniform");
-                            Toast.makeText(TakeAttendance.this, "No Proper Uniform", Toast.LENGTH_SHORT).show();
-                            temp3 = temp3.concat(gauradNameFetch + " was not in proper uniform!!!");
-                            temp33 = temp33.concat(gauradNameFetch + " was not in proper uniform!!!");
-                            Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
-                            Database2.child(String.valueOf(todayday)).push().setValue(temp33);
-
-                        }
-                    }
-                    Database3.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            walkClass w = dataSnapshot.getValue(walkClass.class);
-                            Log.d("asd", Integer.toString(w.getCounter()));
-
-                            Database3.child("1").child("counter").setValue(w.getCounter() + 1);
-
-                            if (w.getCounter() + 1 > 20) {
-                                // one walk is completed
-                                Database3.child("1").child("counter").setValue(0);
-                                Database3.child("1").child("walk").setValue((w.getWalk()) + 1);
-                            }
-
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    new SweetAlertDialog(TakeAttendance.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("marked")
-                            .setContentText("")
-                            .setConfirmText("OK!")
-
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.dismissWithAnimation();
-                                    finish();
                                 }
-                            })
-                            .show();
-                    // supervisor
+                            } else if (radioNoUniform.isChecked() == true) {
+                                if (count == 0) {
+                                    Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(0);
+                                    Log.d("asd", "No Proper Uniform");
+                                    //Toast.makeText(TakeAttendance.this, "No Proper Uniform", Toast.LENGTH_SHORT).show();
+                                    temp3 = temp3.concat(gauradNameFetch + " was not in proper uniform!!!");
+                                    temp33 = temp33.concat(gauradNameFetch + " was not in proper uniform!!!");
+                                    Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
+                                    Database2.child(String.valueOf(todayday)).push().setValue(temp33);
+
+                                }
+                            }
+                            Database3.addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    walkClass w = dataSnapshot.getValue(walkClass.class);
+                                    Log.d("asd", Integer.toString(w.getCounter()));
+
+                                    Database3.child("1").child("counter").setValue(w.getCounter() + 1);
+
+                                    if (w.getCounter() + 1 > 20) {
+                                        // one walk is completed
+                                        Database3.child("1").child("counter").setValue(0);
+                                        Database3.child("1").child("walk").setValue((w.getWalk()) + 1);
+                                    }
+
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                            new SweetAlertDialog(TakeAttendance.this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("marked")
+                                    .setContentText("")
+                                    .setConfirmText("OK!")
+
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
+                                            finish();
+                                        }
+                                    })
+                                    .show();
+                            // supervisor
 
 
 
-                } else {
-                    Toast.makeText(TakeAttendance.this, "PLEASE CHECK ALL THE OPTIONS", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(TakeAttendance.this, "PLEASE CHECK ALL THE OPTIONS", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                    else{
+                        new SweetAlertDialog(TakeAttendance.this, SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("Already marked")
+                                .setContentText("this place is already marked")
+                                .setConfirmText("OK!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                        finish();
+                                    }
+                                })
+                                .show();
+                    }
+
+
+
+
+                }
+                else if(micro < (2*60000))
+                {
+                        Toast.makeText(TakeAttendance.this,"Come after: " + String.valueOf(((2*60000-micro)/(float)60000)) + " Minutes", Toast.LENGTH_SHORT).show();
+                        Intent ii2 = new Intent(TakeAttendance.this,MainActivity.class);
+                        startActivity(ii2);
+
                 }
 
-            }
-            else{
-    new SweetAlertDialog(TakeAttendance.this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText("Already marked")
-            .setContentText("this place is already marked")
-            .setConfirmText("OK!")
-            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sDialog) {
-                    sDialog.dismissWithAnimation();
-                    finish();
-                }
-            })
-            .show();
-        }
+
 
             }
         });
@@ -412,6 +444,55 @@ if(count<10){
 
                       Log.v("fuck yeah",g.getNumber());
                      phonenn.setText(""+g.getNumber());
+
+                     // finding the time stamp
+
+                     databaseReference3 = firebaseDatabase.getReference("Gaurdstest").child("Numbers")
+                             .child(dataSnapshot.getKey()).child("timestamp");
+                     key = dataSnapshot.getKey();
+
+                     databaseReference3.addChildEventListener(new ChildEventListener()
+
+                     {
+                         @Override
+                         public void onChildAdded(DataSnapshot dataSnapshot2, String s2)
+                         {
+                             if(String.valueOf(todayday).equals(dataSnapshot2.getKey()))
+                             {
+                                 String s = dataSnapshot2.getValue().toString();
+                                 lastChecked = Long.parseLong(s);
+
+
+                                 Log.v("qwerty",s);
+                             }
+
+
+                         }
+
+                         @Override
+                         public void onChildChanged(DataSnapshot dataSnapshot2, String s2)
+                         {
+
+
+                         }
+
+                         @Override
+                         public void onChildRemoved(DataSnapshot dataSnapshot2) {
+
+                         }
+
+                         @Override
+                         public void onChildMoved(DataSnapshot dataSnapshot2, String s2) {
+
+                         }
+
+                         @Override
+                         public void onCancelled(DatabaseError databaseError2)
+                         {
+
+                         }
+                     });
+
 
                      //Log.v("asd datasnap",dataSnapshot.getKey());
                      databaseReference2 = firebaseDatabase.getReference("Gaurdstest").child("Numbers")
