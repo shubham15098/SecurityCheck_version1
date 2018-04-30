@@ -128,7 +128,7 @@
 
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:background="@drawable/callIcon"
+                android:background="@drawable/callicon"
                 />
 
 
@@ -168,7 +168,7 @@
                 android:layout_width="130dp"
                 android:layout_marginHorizontal="25dp"
                 android:layout_height="130dp"
-                android:background="@drawable/graphIcon"/>
+                android:background="@drawable/graphicon"/>
 
 
             <TextView
