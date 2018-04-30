@@ -281,6 +281,8 @@ public class TakeAttendance extends AppCompatActivity
                                 temp11 = temp11.concat(gauradNameFetch.replaceAll(","," ") + " was absent!!!");
                                 Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp1);
                                 Database2.child(String.valueOf(todayday)).push().setValue(temp11);
+                                areaDefault(locNameFetch);
+                                personelDefault(Integer.parseInt(IntegerMapGaurd));
                             }
 //                    else
 //                        Toast.makeText(TakeAttendance.this,"please select any one", Toast.LENGTH_SHORT).show();
@@ -300,7 +302,8 @@ public class TakeAttendance extends AppCompatActivity
                                 temp22 = temp22.concat(gauradNameFetch.replaceAll(","," ") + " was sleeping!!!");
                                 Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
                                 Database2.child(String.valueOf(todayday)).push().setValue(temp22);
-
+                                areaDefault(locNameFetch);
+                                personelDefault(Integer.parseInt(IntegerMapGaurd));
                             }
 //                    else
 //                        Toast.makeText(TakeAttendance.this,"please select any one on sleeping", Toast.LENGTH_SHORT).show();
@@ -324,7 +327,8 @@ public class TakeAttendance extends AppCompatActivity
                                     temp33 = temp33.concat(gauradNameFetch.replaceAll(","," ") + " was not in proper uniform!!!");
                                     Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
                                     Database2.child(String.valueOf(todayday)).push().setValue(temp33);
-
+                                    areaDefault(locNameFetch);
+                                    personelDefault(Integer.parseInt(IntegerMapGaurd));
                                 }
                             }
                             Database3.addChildEventListener(new ChildEventListener() {
@@ -419,6 +423,89 @@ public class TakeAttendance extends AppCompatActivity
 
 
     }
+
+    void personelDefault(int numberMap ){
+        FirebaseDatabase firebaseDatabasecopy = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReferencecopy = firebaseDatabasecopy.getReference("Gaurdstest").child("Numbers").child(Integer.toString(numberMap));
+
+
+        databaseReferencecopy.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("asdval",dataSnapshot.getValue().toString());
+                String guard = dataSnapshot.getValue().toString();
+                Log.d("asdval",guard.toString());
+                try {
+                    int previousValue = Integer.parseInt(guard);
+                    previousValue++;
+                    ;
+
+                    databaseReferencecopy.child("DEFAULTS").setValue(Integer.toString(previousValue));
+                    Log.d("asd plus", "plus");
+                }catch(Exception e){}
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    void areaDefault(final String areaname){
+        databaseReference = firebaseDatabase.getReference("Areas");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Area area = dataSnapshot.getValue(Area.class);
+                Log.d("asd",area.toString());
+                if(areaname.equals(area.getAreaName()))
+                {
+                    int previousValue = Integer.parseInt(area.getAreaDefaults());
+                    previousValue++;
+                    ;
+                    mDatabase.child("Areas").child(dataSnapshot.getKey()).child("areaDefaults").setValue(Integer.toString(previousValue));
+                    Log.d("asd plus","plus");
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     void getFirebaseData()
     {

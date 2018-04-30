@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AllGaurdsGeo  extends FragmentActivity implements OnMapReadyCallback {
+public class AllGaurdsPointsGeo extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private HashMap<String, Circle > mMarkers = new HashMap<>();
