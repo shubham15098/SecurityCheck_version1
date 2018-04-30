@@ -26,9 +26,13 @@ public class Fragment_HomeTest {
     @Test
     public void testing()
     {
-        onView(withId(R.id.Supervisor_TextView)).check(matches(withText("SUPERVISOR")));
-        onView(withId(R.id.Reports_TextView)).check(matches(withText("REPORT")));
-        onView(withId(R.id.Areas_TextView)).check(matches(withText("AREAS")));
+        onView(withId(R.id.Areas_tv)).check(matches(withText("Areas")));
+        onView(withId(R.id.guards_tv)).check(matches(withText("Guards")));
+        onView(withId(R.id.supervisortv)).check(matches(withText("Supervisor")));
+        onView(withId(R.id.startv)).check(matches(withText("StarOfWeek")));
+        onView(withId(R.id.graphtv)).check(matches(withText("Graphs")));
+        onView(withId(R.id.wrtv)).check(matches(withText("Weekly Report")));
+
     }
 
 
