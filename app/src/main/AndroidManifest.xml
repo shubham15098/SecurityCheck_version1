@@ -35,11 +35,7 @@
             android:name=".Home_Manager"
             android:label="@string/title_activity_home__manager"
             android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
 
         </activity>
@@ -75,7 +71,13 @@
 
         <service android:name=".GeoFenceTransitionsIntentService" />
         <service android:name=".GPS_Service"/>
-        <activity android:name=".SupervisorWalk" />
+        <activity android:name=".SupervisorWalk" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".WeeklyReport">
 
         </activity>
