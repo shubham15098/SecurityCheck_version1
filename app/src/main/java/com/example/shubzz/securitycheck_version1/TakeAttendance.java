@@ -259,6 +259,7 @@ if(count<10){
                         Log.d("asdcount", Integer.toString(count));
                     } else if (radioAbsent.isChecked() == true) {
                         Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
+                        personelDefault(Database.child("Numbers").child(IntegerMapGaurd));
                         Log.d("asd", "absent");
                         temp1 = temp1.concat(gauradNameFetch + " was absent!!!");
                         temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
@@ -278,11 +279,14 @@ if(count<10){
 
                     } else if (radioSleep.isChecked() == true) {
                         Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
+                        personelDefault(Database.child("Numbers").child(IntegerMapGaurd));
+
                         Log.d("asd", "absent");
                         Toast.makeText(TakeAttendance.this, "sleeping", Toast.LENGTH_SHORT).show();
                         temp2 = temp2.concat(gauradNameFetch + " was sleeping!!!");
                         temp22 = temp22.concat(gauradNameFetch + " was sleeping!!!");
                         Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
+
                         Database2.child(String.valueOf(todayday)).push().setValue(temp22);
                         areaDefault(locNameFetch);
                     }
@@ -293,6 +297,7 @@ if(count<10){
                     if (radioUniform.isChecked() == true) {
                         if (count == 0) {
                             Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(1);
+
                             Log.d("asd", "Awake");
                             Log.d("asdmap", IntegerMapGaurd);
                             Log.d("asdcount", Integer.toString(count));
@@ -302,13 +307,14 @@ if(count<10){
                     } else if (radioNoUniform.isChecked() == true) {
                         if (count == 0) {
                             Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(0);
+                            personelDefault(Database.child("Numbers").child(IntegerMapGaurd));
                             Log.d("asd", "No Proper Uniform");
                             Toast.makeText(TakeAttendance.this, "No Proper Uniform", Toast.LENGTH_SHORT).show();
                             temp3 = temp3.concat(gauradNameFetch + " was not in proper uniform!!!");
                             temp33 = temp33.concat(gauradNameFetch + " was not in proper uniform!!!");
                             Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
                             Database2.child(String.valueOf(todayday)).push().setValue(temp33);
-                            areaDefault(locNameFetch);
+
                         }
                     }
                     Database3.addChildEventListener(new ChildEventListener() {
@@ -388,6 +394,44 @@ if(count<10){
         });
 
 
+    }
+    void personelDefault(final DatabaseReference db ){
+        final DatabaseReference dbCopy=db;
+        db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Guard guard = dataSnapshot.getValue(Guard.class);
+                Log.d("asd",guard.toString());
+
+                    int previousValue = Integer.parseInt(guard.DEFAULTS);
+                    previousValue++;
+                    ;
+
+                    dbCopy.child("DEFAULTS").setValue(Integer.toString(previousValue));
+                    Log.d("asd plus","plus");
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
     void areaDefault(final String areaname){
         databaseReference = firebaseDatabase.getReference("Areas");
