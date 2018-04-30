@@ -1,7 +1,10 @@
 package com.example.shubzz.securitycheck_version1;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -38,6 +41,18 @@ public class AreasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_areas);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_area);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ii = new Intent(AreasActivity.this,AllGaurdsPointsGeo.class);
+                startActivity(ii);
+            }
+        });
+
+
+
         mRecyclerView = (RecyclerView) findViewById(R.id.area_name_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -56,6 +71,8 @@ public class AreasActivity extends AppCompatActivity {
 
     void getFirebaseData()
     {
+        final ProgressDialog progressDialog=new ProgressDialog(this);
+    progressDialog.show();
         databaseReference = firebaseDatabase.getReference("Areas");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,9 +114,10 @@ public class AreasActivity extends AppCompatActivity {
                     areasSorted.add(temp);
                     Log.e("Areas Sorted", temp.getAreaDefaults());
                     areas.get(pos).setAreaDefaults("-1");
+
 //                    mRecyclerView.setAdapter(adapter);
                 }
-
+                progressDialog.dismiss();
             }
 
             @Override
