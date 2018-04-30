@@ -21,11 +21,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
         <activity
@@ -57,14 +53,19 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".AllGaurdsGeo"
+            android:name=".AllGaurdsPointsGeo"
             android:label="Map" />
+        <activity android:name=".AllGaurdsGeoLocator"/>
 
         <service android:name=".GeoFenceTransitionsIntentService" />
-
+        <service android:name=".GPS_Service"/>
         <activity android:name=".SupervisorWalk" />
         <activity android:name=".WeeklyReport">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public static int mflag2 = 0;
 
+    ProgressDialog progressDialog;
+
     public Map<String, String> myMap = new HashMap<>();
     public Map<String, String> guardA = new HashMap<>();
     public Map<String, String> guardB = new HashMap<>();
@@ -156,7 +158,8 @@ public class MainActivity extends AppCompatActivity implements
     }
     private void enable_buttons() {
 
-
+        Intent i =new Intent(getApplicationContext(),GPS_Service.class);
+        startService(i);
 
     }
 
@@ -207,8 +210,10 @@ public class MainActivity extends AppCompatActivity implements
         final DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
         //start gps service
-        final Intent i =new Intent(getApplicationContext(),GPS_Service.class);
-        startService(i);
+        if(!runtime_permissions())
+            enable_buttons();
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.show();
 //        Button bun = (Button) findViewById(R.id.bun);
 //        bun.setOnClickListener(new View.OnClickListener()
 //        {
@@ -383,8 +388,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void readFromFirebase()
     {
-        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.show();
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("timetable").child("gaurdPostings");
 
@@ -399,6 +403,9 @@ public class MainActivity extends AppCompatActivity implements
                 guardA.put(g.getPOST(),g.getGAURD1());
                 guardB.put(g.getPOST(),g.getGaurd2());
                 guardC.put(g.getPOST(),g.getGAURD3());
+                if(guardA.size()>=25){
+                    progressDialog.dismiss();
+                }
 
                 if(g.getPOST().equals("New acad(2nd Floor)"))
                 {
@@ -544,34 +551,34 @@ public class MainActivity extends AppCompatActivity implements
 
 
             // find the guard
-                String s = new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime());
-                s = s.substring(0,2);
-                time = Integer.parseInt(s);
-                Log.v("fuck hour", String.valueOf(time));
+            String s = new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime());
+            s = s.substring(0,2);
+            time = Integer.parseInt(s);
+            Log.v("fuck hour", String.valueOf(time));
 
-                if(time >= 0 && time < 8)
-                {
-                    Log.v("fuck","inside");
-                    guardName = guardC.get(location);
-                    Log.v("fuck",guardName);
-                }
-                else if(time >= 8 && time < 16)
-                {
-                    guardName = guardA.get(location);
-                }
-                else if(time >= 16 && time < 24)
-                {
-                    guardName = guardB.get(location);
-                }
+            if(time >= 0 && time < 8)
+            {
+                Log.v("fuck","inside");
+                guardName = guardC.get(location);
+                Log.v("fuck",guardName);
+            }
+            else if(time >= 8 && time < 16)
+            {
+                guardName = guardA.get(location);
+            }
+            else if(time >= 16 && time < 24)
+            {
+                guardName = guardB.get(location);
+            }
 
-                //Log.v("fuck",guardName);
+            //Log.v("fuck",guardName);
 
 
 
-                Intent i = new Intent(MainActivity.this,TakeAttendance.class);
-                i.putExtra("gaurdname",guardName);
-                i.putExtra("location",location);
-                startActivity(i);
+            Intent i = new Intent(MainActivity.this,TakeAttendance.class);
+            i.putExtra("gaurdname",guardName);
+            i.putExtra("location",location);
+            startActivity(i);
         }
     }
 
