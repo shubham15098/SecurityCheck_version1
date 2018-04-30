@@ -207,6 +207,9 @@ public class MainActivity extends AppCompatActivity implements
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        guardA.put("Gate_Number_1","Mahendra,Kumar");
+        guardB.put("Gate_Number_1","Nandan,Kumar");
+        guardC.put("Gate_Number_1","Shashi,Kumar");
         final DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
         //start gps service
@@ -325,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements
 
                                 flag = 1;
                                 t.setText( myLocation);
+                                location = "Gate_Number_1";
                                 t2.setText("CONNECTED");
                                 t3.setText("GOOD JOB");
                                 img.setImageResource(R.drawable.ellipse1);
@@ -463,6 +467,8 @@ public class MainActivity extends AppCompatActivity implements
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
 
     }

@@ -193,7 +193,8 @@ public class GuardsName extends AppCompatActivity {
                 if(goodGuards.contains(guards.get(getAdapterPosition()).getName()))
                     Color="Green";
                 i.putExtra("COLOR",Color);
-                i.putExtra("DEFAULTS",guards.get(getAdapterPosition()).getDEFAULTS() );
+                i.putExtra("DEFAULTS",guards.get(getAdapterPosition()).getNumber() );
+                Log.e("defaults sent",guards.get(getAdapterPosition()).getDEFAULTS()  );
                 ArrayList<String> remarks = new ArrayList<>();
 //                i.putStringArrayListExtra("REMARKS",teams);
                 startActivity(i);
