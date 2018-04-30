@@ -147,14 +147,14 @@ public class AreasActivity extends AppCompatActivity {
             Log.e("goodareas", String.valueOf(goodAreas.size()));
             if(goodAreas.contains(areas.get(position).getAreaName()))
             {
-                holder.itemView.setBackgroundColor(Color.GREEN);
-                holder.areaName.setBackgroundColor(Color.GREEN);
+                holder.itemView.setBackgroundColor(Color.parseColor("#4FC3F7"));
+                holder.areaName.setBackgroundColor(Color.parseColor("#4FC3F7"));
 
             }
             else
             {
-                holder.itemView.setBackgroundColor(Color.RED);
-                holder.areaName.setBackgroundColor(Color.RED);
+                holder.itemView.setBackgroundColor(Color.parseColor("#FF4081"));
+                holder.areaName.setBackgroundColor(Color.parseColor("#FF4081"));
             }
         }
 
