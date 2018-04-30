@@ -105,7 +105,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guards"
+            android:text="Supervisor"
 
             android:textStyle="bold"
             android:fontFamily="sans-serif-condensed"
@@ -123,19 +123,19 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/weeklyIcon"
+                android:id="@+id/callIcon"
                 android:layout_marginHorizontal="25dp"
 
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:background="@drawable/feedsnew"
+                android:background="@drawable/CallIcon"
                 />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Weekly Report"
+                android:text="Contact"
 
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-condensed"
@@ -168,13 +168,13 @@
                 android:layout_width="130dp"
                 android:layout_marginHorizontal="25dp"
                 android:layout_height="130dp"
-                android:background="@drawable/supernew"/>
+                android:background="@drawable/GraphIcon"/>
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Guards"
+                android:text="Graphs"
 
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-condensed"

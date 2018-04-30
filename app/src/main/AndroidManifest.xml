@@ -22,7 +22,11 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".TakeAttendance"
@@ -32,11 +36,7 @@
             android:label="@string/title_activity_home__manager"
             android:theme="@style/AppTheme.NoActionBar" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".GuardsName" />
         <activity android:name=".ImageSlider" />
@@ -68,11 +68,7 @@
         <service android:name=".GPS_Service"/>
         <activity android:name=".SupervisorWalk" />
         <activity android:name=".WeeklyReport">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
