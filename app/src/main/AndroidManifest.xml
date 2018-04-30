@@ -43,11 +43,7 @@
         </activity>
         <activity android:name=".GuardsName"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ImageSlider"
             android:screenOrientation="portrait"/>
@@ -62,7 +58,13 @@
         <activity android:name=".Graphs"
             android:screenOrientation="portrait"/>
         <activity android:name=".Login"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+           </activity>
         <activity android:name=".Splashscreen"
             android:screenOrientation="portrait"/>
         <activity android:name=".Supervisor"
@@ -82,9 +84,13 @@
         <activity
             android:name=".AllGaurdsPointsGeo"
             android:label="Map"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity android:name=".AllGaurdsGeoLocator"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <service android:name=".GeoFenceTransitionsIntentService"
             android:screenOrientation="portrait"/>
