@@ -1,6 +1,7 @@
 package com.example.shubzz.securitycheck_version1;
 
-public class Area {
+public class Area
+{
     String areaName;
     String areaDefaults;
 
