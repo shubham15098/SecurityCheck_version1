@@ -138,8 +138,8 @@ public class GeoFenceTransitionsIntentService extends IntentService
     private void sendNotification(String notificationDetails)
     {
         // i think here i will have to make the changes
-        //myMain.mflag2 = 1;
-        //myMain.myLocation = notificationDetails;
+        myMain.mflag2 = 1;
+        myMain.myLocation = notificationDetails;
 
         // Create an explicit content Intent that starts the main Activity.
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -189,7 +189,7 @@ public class GeoFenceTransitionsIntentService extends IntentService
     private void sendNotification2(String notificationDetails)
     {
         // i think here i will have to make the changes
-       // myMain.mflag2 = 0;
+        myMain.mflag2 = 0;
 
 
         // Create an explicit content Intent that starts the main Activity.
