@@ -147,7 +147,7 @@ public class GuardsName extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(GuardsName.recyler_adapter_guards_name.MyViewHolder holder, int position) {
-            holder.guardName.setText(guards.get(position).getName());
+            holder.guardName.setText(guards.get(position).getName().replace(","," "));
             Log.e("good Guards", String.valueOf(goodGuards.size()));
             if(goodGuards.contains(guards.get(position).getName()))
             {

@@ -55,7 +55,7 @@ public class ImageSlider extends AppCompatActivity {
 
 //        ArrayList<String> remarks = i.getStringArrayListExtra("REMARKS");
             TextView name = (TextView) findViewById(R.id.name);
-            name.setText(guard);
+            name.setText(guard.replace(","," "));
             TextView defaults = (TextView)findViewById(R.id.defaults);
             defaults.setText(def);
             ListView l = (ListView) findViewById(R.id.listview);
