@@ -27,7 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".TakeAttendance"
@@ -35,7 +39,10 @@
         <activity
             android:name=".Home_Manager"
             android:label="@string/title_activity_home__manager"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+
+        </activity>
         <activity android:name=".GuardsName" />
         <activity android:name=".ImageSlider" />
         <activity android:name=".AreasActivity" />

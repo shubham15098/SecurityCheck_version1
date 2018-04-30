@@ -1,121 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+    android:layout_height="wrap_content"
     tools:context="com.example.shubzz.securitycheck_version1.Fragment_Home">
 
-    <ImageView
-        android:id="@+id/imageButton2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="53dp"
-        android:layout_marginTop="65dp"
-        app:srcCompat="@drawable/one_box" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/imageButton2"
-        android:layout_marginEnd="60dp"
-        app:srcCompat="@drawable/one_box" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignStart="@+id/imageButton2"
-        android:layout_below="@+id/imageButton2"
-        android:layout_marginTop="80dp"
-        app:srcCompat="@drawable/one_box" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignStart="@+id/imageView3"
-        android:layout_alignTop="@+id/imageView4"
-        app:srcCompat="@drawable/one_box" />
-
-    <TextView
-        android:id="@+id/Supervisor_TextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/imageButton2"
-        android:layout_below="@+id/imageButton2"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="13dp"
-        android:text="SUPERVISOR"
-        android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/Guards_TextView"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/areasIcon"
+                android:layout_width="130dp"
+                android:layout_marginHorizontal="25dp"
+                android:layout_height="130dp"
+                android:background="@drawable/areasnew"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Areas"
+
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_marginTop="2dp"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/guardsIcon"
+                android:layout_marginHorizontal="25dp"
+
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:background="@drawable/guardsnew"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guards"
+
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_marginTop="2dp"
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/imageView3"
-        android:layout_alignTop="@+id/Supervisor_TextView"
-        android:layout_marginEnd="10dp"
-        android:text="GUARDS"
-        android:textColor="@android:color/black" />
+        android:layout_marginTop="20dp"
 
-    <TextView
-        android:id="@+id/Areas_TextView"
-        android:layout_width="wrap_content"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/supervisorIcon"
+            android:layout_width="130dp"
+            android:layout_marginHorizontal="25dp"
+            android:layout_height="130dp"
+            android:background="@drawable/supernew"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Supervisor"
+
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:layout_marginTop="2dp"
+            />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/callIcon"
+                android:layout_marginHorizontal="25dp"
+
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:background="@drawable/callIcon"
+                />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contact"
+
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:layout_marginTop="2dp"
+                />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/attnIntent"
-        android:layout_below="@+id/imageView4"
-        android:text="AREAS"
-        android:textColor="@android:color/black" />
+       android:layout_marginTop="20dp"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/Reports_TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/Guards_TextView"
-        android:layout_alignTop="@+id/Areas_TextView"
-        android:text="REPORT"
-        android:textColor="#0a0a0a" />
-
-    <ImageView
-        android:id="@+id/attnIntent"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/imageView4"
-        android:layout_alignEnd="@+id/Supervisor_TextView"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="13dp"
-        app:srcCompat="@drawable/group" />
-
-    <ImageView
-        android:id="@+id/sugg_intent"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignStart="@+id/imageView9"
-        android:layout_alignTop="@+id/attnIntent"
-        app:srcCompat="@drawable/group" />
-
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/Areas_TextView"
-        android:layout_marginBottom="188dp"
-        app:srcCompat="@drawable/group" />
-
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/imageView8"
-        android:layout_marginEnd="83dp"
-        app:srcCompat="@drawable/group" />
+            <ImageButton
+                android:id="@+id/supervisorIcon2"
+                android:layout_width="130dp"
+                android:layout_marginHorizontal="25dp"
+                android:layout_height="130dp"
+                android:background="@drawable/graphIcon"/>
 
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Graphs"
+
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_marginTop="2dp"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/weeklyIcon2"
+                android:layout_marginHorizontal="25dp"
+
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:background="@drawable/feedsnew"
+                />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weekly Report"
+
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:layout_marginTop="2dp"
+                />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
