@@ -135,14 +135,14 @@
                     android:id="@+id/radioButton"
                     android:layout_marginVertical="20dp"
                     android:layout_marginHorizontal="40dp"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
 
                     android:checked="false"
 
                     android:textSize="25dp"
                     android:button="@null"
-                    android:background="@drawable/cross_selector"/>
+                    android:background="@drawable/tick_selector"/>
 
                 <RadioButton
                     android:id="@+id/radioButton2"
@@ -198,13 +198,13 @@
 
                 <RadioButton
                     android:id="@+id/radioButton_uniform1"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
 
                     android:layout_marginVertical="20dp"
                     android:layout_marginHorizontal="40dp"
                     android:button="@null"
-                    android:background="@drawable/cross_selector"
+                    android:background="@drawable/tick_selector"
 
                     android:checked="false"
 
@@ -262,10 +262,10 @@
 
                 <RadioButton
                     android:id="@+id/radioButton3_sleep1"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:button="@null"
-                    android:background="@drawable/cross_selector"
+                    android:background="@drawable/tick_selector"
                     android:layout_marginVertical="20dp"
                     android:layout_marginHorizontal="40dp"
                     android:checked="false"

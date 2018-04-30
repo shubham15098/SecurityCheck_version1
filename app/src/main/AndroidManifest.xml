@@ -35,9 +35,17 @@
 
 
         </activity>
-        <activity android:name=".GuardsName" />
+        <activity android:name=".GuardsName" >
+
+        </activity>
         <activity android:name=".ImageSlider" />
-        <activity android:name=".AreasActivity" />
+        <activity android:name=".AreasActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".GuardProfileActivity" />
         <activity android:name=".StarOfTheWeek" />
         <activity android:name=".Graphs" />
