@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -80,6 +81,7 @@ public class TakeAttendance extends AppCompatActivity
     String phoneNumber="9999";
     private long lastChecked;
     String key;
+    ImageView profilephoto;
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     //////
 
@@ -101,7 +103,7 @@ public class TakeAttendance extends AppCompatActivity
 
 
             if (uri != null) {
-                filePath = mStorageRef.child("Profile Pictures").child(gauradNameFetch.toString()).child(uri.getLastPathSegment());
+                filePath = mStorageRef.child("Pictures").child(gauradNameFetch.toString()).child(uri.getLastPathSegment());
 
 
 
@@ -111,13 +113,13 @@ public class TakeAttendance extends AppCompatActivity
                 Log.v("NULL", "null uri");
             }
 
-            StorageReference ref = mStorageRef.child("Profile Pictures").child(gauradNameFetch.toString()).child(uri.getLastPathSegment());
+            StorageReference ref = mStorageRef.child("Pictures").child(gauradNameFetch.toString()).child(uri.getLastPathSegment());
             ref.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            mDatabase.child("profile " +
+                            mDatabase.child(
                                     "pics").child(gauradNameFetch.toString()).push().setValue(taskSnapshot.getDownloadUrl().toString());
                             Picasso.get()
                                     .load(uri)
@@ -159,6 +161,7 @@ public class TakeAttendance extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_attendance);
 
+        profilephoto= (ImageView) findViewById(R.id.profilephotoimage);
 
         ////
 
@@ -191,6 +194,10 @@ public class TakeAttendance extends AppCompatActivity
         locNameFetch=intent.getStringExtra("location");
         mSubmit=findViewById(R.id.submitattendence);
 
+        Log.e("name",gauradNameFetch);
+        //setProfilePhoto("X,Y");
+        setProfilePhoto(gauradNameFetch);
+        profilephoto.invalidate();
 
 
 //        radioAttendenceGroup =(RadioGroup)findViewById(R.id.radioGroup_Attendence);
@@ -678,7 +685,30 @@ public class TakeAttendance extends AppCompatActivity
         return Uri.parse(path);
     }
 
-    /*class support{
+    public void setProfilePhoto(final String guard)
+    {
+        Log.e("guard",guard);
+        FirebaseDatabase.getInstance().getReference().child("profile pics").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url="http://mlzsalwar.ac.in/images/404.jpg";
+                if(dataSnapshot.hasChild(guard)) {
+                    for (DataSnapshot snapshot : dataSnapshot.child(guard).getChildren()) {
+                        url = snapshot.getValue().toString();
+                        Log.e("URL",url);
 
-    }*/
+                    }
+                }
+
+                Picasso.get().load(url).fit().centerCrop().into(profilephoto);
+                profilephoto.invalidate();
+
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

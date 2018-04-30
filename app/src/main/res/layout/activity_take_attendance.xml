@@ -23,6 +23,12 @@
             android:textStyle="bold"
             android:fontFamily="sans-serif-condensed"/>
 
+        <ImageView
+            android:id="@+id/profilephotoimage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:srcCompat="@drawable/blue_button_background" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

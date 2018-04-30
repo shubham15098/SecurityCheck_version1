@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,10 +25,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import au.com.bytecode.opencsv.CSVWriter;
+
 public class Home_Manager extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
-
+ArrayList<GuardFromFirebase> guards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,12 +51,14 @@ public class Home_Manager extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        guards = new ArrayList<>();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                exportToCsv();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
 
@@ -132,5 +148,74 @@ public class Home_Manager extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void exportToCsv()
+    {
+
+
+        FirebaseDatabase.getInstance().getReference("Gaurdstest").child("Numbers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                guards.clear();
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot uniqueKeySnapshot : snapshot.getChildren()) {
+                    GuardFromFirebase a = uniqueKeySnapshot.getValue(GuardFromFirebase.class);
+                    guards.add(a);
+                }
+
+                Log.e("print", String.valueOf(guards.size()));
+
+                    Log.e("print2", String.valueOf(guards.size()));
+                    String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                    String fileName = "guards.csv";
+                    String filePath = baseDir + File.separator + fileName;
+                    File f = new File(filePath);
+                    CSVWriter writer = null;
+
+                    if (f.exists() && !f.isDirectory()) {
+                        try {
+                            FileWriter mFileWriter = new FileWriter(filePath, false);
+                            writer = new CSVWriter(mFileWriter);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        try {
+                            writer = new CSVWriter(new FileWriter(filePath));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    List<String[]> data = new ArrayList<>();
+                    data.add(new String[]{"Name", "Number", "Deaults"});
+                    for (GuardFromFirebase user : guards) {
+                        data.add(new String[]{user.getName(), user.getNumber(), user.getDEFAULTS()});
+                    }
+                    try {
+
+                        writer.writeAll(data);
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Intent i = new Intent();
+                    i.setAction(android.content.Intent.ACTION_VIEW);
+                    i.setDataAndType(Uri.fromFile(f), "text/csv");
+                    startActivity(i);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 }

@@ -28,7 +28,7 @@ public class ImageSlider extends AppCompatActivity {
     private static ViewPager mPager;
     private DatabaseReference ref;
     private static int currentPage = 0;
-    String s1="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg?auto=compress&cs=tinysrgb&h=350";
+    String s1="http://mlzsalwar.ac.in/images/404.jpg";
     String s2="https://i.pinimg.com/originals/e2/a6/57/e2a657e2476d73760d32f63429b0d597.jpg";
     ImageView profilephoto;
     DatabaseReference databaseReference2;
