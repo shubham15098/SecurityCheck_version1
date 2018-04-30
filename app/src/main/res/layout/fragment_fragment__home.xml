@@ -128,14 +128,14 @@
 
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:background="@drawable/callicon"
+                android:background="@drawable/star"
                 />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Contact"
+                android:text="StarOfWeek"
 
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-condensed"
