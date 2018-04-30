@@ -153,7 +153,7 @@ class MoviesAdapter extends RecyclerView.Adapter<com.example.shubzz.securitychec
             //holder.tick[temp-i].setImageDrawable(context.getResources().getDrawable(R.drawable.tick));
             Glide.with(context)
                     .asBitmap()
-                    .load(R.drawable.ic_launcher)
+                    .load(R.drawable.close)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
