@@ -21,46 +21,42 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class GPS_Service extends Service {
-
+/*
+* code taken from opensource tutorial  and changed according to needs
+* https://github.com/miskoajkula/GPS_service/blob/master/app/src/main/java/testing/gps_service/GPS_Service.java
+* start here
+* */
     private LocationListener listener;
     private LocationManager locationManager;
-    DatabaseReference ref ;
-    GeoFire geoFire;
-    FirebaseUser user;// = FirebaseAuth.getInstance().getCurrentUser();
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+    DatabaseReference mDatabase;
 
     @Override
     public void onCreate() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
-        ref= FirebaseDatabase.getInstance().getReference().child("location").child("testingcordinates");
-        geoFire = new GeoFire(ref);
-        Log.d("asd","gpsservice start");
+        Log.d("asd","service created");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Intent i = new Intent("location_update");
-                Log.d("asd",location.getLatitude()+""+location.getLatitude());
-                ref.child("latitude").setValue(location.getLatitude());
-                ref.child("longitude").setValue(location.getLongitude());
+                Log.d("asd",""+location.getLatitude()+" "+location.getLongitude());
+                mDatabase.child("location").child("1").child("latitude").setValue(location.getLatitude());
+                mDatabase.child("location").child("1").child("longitude").setValue(location.getLongitude());
 
-                i.putExtra("coordinates", location.getLongitude() + " " + location.getLatitude());
-                sendBroadcast(i);
             }
 
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
-                Log.d("asd","status");
+
             }
 
             @Override
             public void onProviderEnabled(String s) {
-                Log.d("asd","provider enabled");
+
             }
 
             @Override
@@ -74,12 +70,17 @@ public class GPS_Service extends Service {
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         //noinspection MissingPermission
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Log.d("asd","listener registered");
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0  , 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, listener);
 
     }
 
@@ -92,3 +93,4 @@ public class GPS_Service extends Service {
         }
     }
 }
+/*end here*/

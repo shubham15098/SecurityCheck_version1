@@ -20,45 +20,26 @@
         tools:replace="android:icon">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+
+        </activity>
         <activity
             android:name=".TakeAttendance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Home_Manager"
             android:label="@string/title_activity_home__manager"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-        </activity>
-
-        <activity android:name=".GuardsName">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".GuardsName" />
         <activity android:name=".ImageSlider" />
-        <activity android:name=".AreasActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".AreasActivity" />
         <activity android:name=".GuardProfileActivity" />
-        <activity android:name=".StarOfTheWeek">
-
-        </activity>
-        <activity android:name=".Graphs">
-
-        </activity>
-        <activity android:name=".Login">
-
-        </activity>
-        <activity android:name=".Splashscreen"/>
-        <activity android:name=".Supervisor"/>
+        <activity android:name=".StarOfTheWeek" />
+        <activity android:name=".Graphs" />
+        <activity android:name=".Login" />
+        <activity android:name=".Splashscreen" />
+        <activity android:name=".Supervisor" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -72,8 +53,19 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".AllGaurdsGeo"
-            android:label="Map">
+            android:name=".AllGaurdsPointsGeo"
+            android:label="Map" />
+        <activity android:name=".AllGaurdsGeoLocator"/>
+
+        <service android:name=".GeoFenceTransitionsIntentService" />
+        <service android:name=".GPS_Service"/>
+        <activity android:name=".SupervisorWalk" />
+        <activity android:name=".WeeklyReport">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
