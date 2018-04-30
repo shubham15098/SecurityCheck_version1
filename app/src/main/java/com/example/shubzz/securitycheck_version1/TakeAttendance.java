@@ -84,6 +84,7 @@ public class TakeAttendance extends AppCompatActivity
     TextView phonenn;
     TextView gg;
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -263,6 +264,7 @@ if(count<10){
                         temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
                         Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp1);
                         Database2.child(String.valueOf(todayday)).push().setValue(temp11);
+                        areaDefault(locNameFetch);
                     }
 //                    else
 //                        Toast.makeText(TakeAttendance.this,"please select any one", Toast.LENGTH_SHORT).show();
@@ -282,7 +284,7 @@ if(count<10){
                         temp22 = temp22.concat(gauradNameFetch + " was sleeping!!!");
                         Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
                         Database2.child(String.valueOf(todayday)).push().setValue(temp22);
-
+                        areaDefault(locNameFetch);
                     }
 //                    else
 //                        Toast.makeText(TakeAttendance.this,"please select any one on sleeping", Toast.LENGTH_SHORT).show();
@@ -306,7 +308,7 @@ if(count<10){
                             temp33 = temp33.concat(gauradNameFetch + " was not in proper uniform!!!");
                             Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
                             Database2.child(String.valueOf(todayday)).push().setValue(temp33);
-
+                            areaDefault(locNameFetch);
                         }
                     }
                     Database3.addChildEventListener(new ChildEventListener() {
@@ -387,7 +389,45 @@ if(count<10){
 
 
     }
+    void areaDefault(final String areaname){
+        databaseReference = firebaseDatabase.getReference("Areas");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Area area = dataSnapshot.getValue(Area.class);
+                Log.d("asd",area.toString());
+                if(areaname.equals(area.getAreaName()))
+                {
+                    int previousValue = Integer.parseInt(area.getAreaDefaults());
+                    previousValue++;
+                    ;
+                    mDatabase.child("Areas").child(dataSnapshot.getKey()).child("areaDefaults").setValue(Integer.toString(previousValue));
+                    Log.d("asd plus","plus");
+                }
+            }
 
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     void getFirebaseData()
     {
         ProgressDialog progressDialog = new ProgressDialog(TakeAttendance.this);

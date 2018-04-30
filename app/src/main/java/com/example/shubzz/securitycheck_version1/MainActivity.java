@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
     }
     private void enable_buttons() {
 
-
+        Intent i =new Intent(getApplicationContext(),GPS_Service.class);
+        startService(i);
 
     }
 
@@ -141,8 +142,9 @@ public class MainActivity extends AppCompatActivity {
         final DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
         //start gps service
-        final Intent i =new Intent(getApplicationContext(),GPS_Service.class);
-        startService(i);
+        if(!runtime_permissions())
+            enable_buttons();
+
 //        Button bun = (Button) findViewById(R.id.bun);
 //        bun.setOnClickListener(new View.OnClickListener()
 //        {

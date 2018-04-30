@@ -21,15 +21,17 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".TakeAttendance"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".TakeAttendance"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".Home_Manager"
             android:label="@string/title_activity_home__manager"
@@ -63,7 +65,9 @@
 
         <activity
             android:name=".AllGaurdsGeoLocator"
-            android:label="@string/title_activity_all_gaurds_geo_locator"></activity>
+            android:label="@string/title_activity_all_gaurds_geo_locator">
+
+        </activity>
     </application>
 
 </manifest>

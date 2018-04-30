@@ -1,5 +1,6 @@
 package com.example.shubzz.securitycheck_version1;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,18 +45,24 @@ public class AllGaurdsGeoLocator  extends FragmentActivity implements OnMapReady
     DatabaseReference databaseReference;
     AreasActivity.recyler_adapter_areas adapter;
     ArrayList<String> goodAreas;
+    public Map<String, String> guardA = new HashMap<>();
+    public Map<String, String> guardB = new HashMap<>();
+    public Map<String, String> guardC = new HashMap<>();
     ArrayList<String> badAreas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        readFromFirebase();
+
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_all_gaurds_location);
         areas = new ArrayList<>();
         areasSorted = new ArrayList<>();
         goodAreas=new ArrayList<>();
         badAreas=new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        PositionStrings.add("Gate No-1");
+        PositionStrings.add("Gate No -1");
         PositionStrings.add("Gate No-3");
         PositionStrings.add("Gate No-4");
         PositionStrings.add("Gate No-6");
@@ -71,7 +80,7 @@ public class AllGaurdsGeoLocator  extends FragmentActivity implements OnMapReady
         PositionStrings.add("Faculty new");
 
 
-        Latitude.put("Gate No-1","28.5470619");
+        Latitude.put("Gate No -1","28.5470619");
         Latitude.put("Gate No-3","28.5448674");
         Latitude.put("Gate No-4","28.545044");
         Latitude.put("Gate No-6","28.544584");
@@ -87,7 +96,7 @@ public class AllGaurdsGeoLocator  extends FragmentActivity implements OnMapReady
         Latitude.put("Faculty new","28.544232");
 
 
-        Longitude.put("Gate No-1","77.2723056");
+        Longitude.put("Gate No -1","77.2723056");
         Longitude.put("Gate No-3","77.2711564");
         Longitude.put("Gate No-4","77.270038");
         Longitude.put("Gate No-6","77.273047");
@@ -103,10 +112,63 @@ public class AllGaurdsGeoLocator  extends FragmentActivity implements OnMapReady
         Longitude.put("Faculty new","77.270151");
         databaseReference = firebaseDatabase.getReference("Areas");
 
-        setContentView(R.layout.activity_all_gaurds_geo_locator);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapAll);
         mapFragment.getMapAsync(this);
+
+
+    }
+
+    private void readFromFirebase()
+    {
+        ProgressDialog progressDialog = new ProgressDialog(AllGaurdsGeoLocator.this);
+        progressDialog.show();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("timetable").child("gaurdPostings");
+
+        databaseReference.addChildEventListener(new ChildEventListener()
+
+        {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot2, String s2)
+            {
+                mappingGuard g = dataSnapshot2.getValue(mappingGuard.class);
+                Log.v("fuck you",g.getGAURD1());
+                guardA.put(g.getPOST(),g.getGAURD1());
+                guardB.put(g.getPOST(),g.getGaurd2());
+                guardC.put(g.getPOST(),g.getGAURD3());
+                if(guardA.size()>=25){
+                    setMarker();
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot2, String s2)
+            {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot2) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot2, String s2) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError2)
+            {
+
+            }
+        });
+
+        progressDialog.dismiss();
     }
 
     @Override
@@ -116,55 +178,54 @@ public class AllGaurdsGeoLocator  extends FragmentActivity implements OnMapReady
 
     }
 
-    private void subscribeToUpdates() {
-        Log.d("asd","gotsomething");
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Actual");
-        ref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d("asd","gotsomething");
 
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.d(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
 
     private void setMarker() {
 
+        String s = new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime());
+        s = s.substring(0,2);
+        int time = Integer.parseInt(s);
+        String guardName = null;
 
         for(String i : PositionStrings){
            //get hashmap values of gaurd on duty that time
             // plot them
+            Log.d("asd",""+guardC.keySet());
+            if(time >= 0 && time < 8)
+            {
+                Log.v("fuck","inside");
+                guardName = guardC.get(i);
+            }
+            else if(time >= 8 && time < 16)
+            {
+                guardName = guardA.get(i);
+            }
+            else if(time >= 16 && time < 24)
+            {
+                guardName = guardB.get(i);
+            }
+              Log.d("asd","a"+guardName);
 
+            LatLng location = new LatLng( Double.parseDouble(Latitude.get(i)), Double.parseDouble(Longitude.get(i)));
+            if (!mMarkers2.containsKey(i)) {
+
+                mMarkers2.put(i, mMap.addMarker(new MarkerOptions().title(guardName+"("+i+")").position(location)));
+                Log.d("asdbad","g");
+            }
+            else {
+                mMarkers2.get(i).setPosition(location);
+
+            }
 
         }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Circle marker : mMarkers.values()) {
-            builder.include(marker.getCenter());
-        }
+
         for (Marker marker : mMarkers2.values()) {
             builder.include(marker.getPosition());
         }
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 300));
+      mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 300));
     }
 
 
