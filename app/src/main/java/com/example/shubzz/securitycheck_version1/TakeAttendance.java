@@ -259,7 +259,7 @@ if(count<10){
                         Log.d("asdcount", Integer.toString(count));
                     } else if (radioAbsent.isChecked() == true) {
                         Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
-                        personelDefault(Database.child("Numbers").child(IntegerMapGaurd));
+                        personelDefault(Integer.parseInt(IntegerMapGaurd));
                         Log.d("asd", "absent");
                         temp1 = temp1.concat(gauradNameFetch + " was absent!!!");
                         temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
@@ -279,7 +279,7 @@ if(count<10){
 
                     } else if (radioSleep.isChecked() == true) {
                         Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
-                        personelDefault(Database.child("Numbers").child(IntegerMapGaurd));
+                        personelDefault(Integer.parseInt(IntegerMapGaurd));
 
                         Log.d("asd", "absent");
                         Toast.makeText(TakeAttendance.this, "sleeping", Toast.LENGTH_SHORT).show();
@@ -307,7 +307,7 @@ if(count<10){
                     } else if (radioNoUniform.isChecked() == true) {
                         if (count == 0) {
                             Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(0);
-                            personelDefault(Database.child("Numbers").child(IntegerMapGaurd));
+                            personelDefault(Integer.parseInt(IntegerMapGaurd));
                             Log.d("asd", "No Proper Uniform");
                             Toast.makeText(TakeAttendance.this, "No Proper Uniform", Toast.LENGTH_SHORT).show();
                             temp3 = temp3.concat(gauradNameFetch + " was not in proper uniform!!!");
@@ -395,21 +395,25 @@ if(count<10){
 
 
     }
-    void personelDefault(final DatabaseReference db ){
-        final DatabaseReference dbCopy=db;
-        db.addChildEventListener(new ChildEventListener() {
+    void personelDefault(int numberMap ){
+        FirebaseDatabase firebaseDatabasecopy = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReferencecopy = firebaseDatabasecopy.getReference("Gaurdstest").child("Numbers").child(Integer.toString(numberMap));
+
+
+        databaseReferencecopy.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Guard guard = dataSnapshot.getValue(Guard.class);
-                Log.d("asd",guard.toString());
-
-                    int previousValue = Integer.parseInt(guard.DEFAULTS);
+                Log.d("asdval",dataSnapshot.getValue().toString());
+                String guard = dataSnapshot.getValue().toString();
+                Log.d("asdval",guard.toString());
+                try {
+                    int previousValue = Integer.parseInt(guard);
                     previousValue++;
                     ;
 
-                    dbCopy.child("DEFAULTS").setValue(Integer.toString(previousValue));
-                    Log.d("asd plus","plus");
-
+                    databaseReferencecopy.child("DEFAULTS").setValue(Integer.toString(previousValue));
+                    Log.d("asd plus", "plus");
+                }catch(Exception e){}
             }
 
             @Override

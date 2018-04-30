@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     Calendar calobj = Calendar.getInstance();
     String location="";
-
+    ProgressDialog progressDialog;
 
     private BroadcastReceiver broadcastReceiver;
     @Override
@@ -144,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
         //start gps service
         if(!runtime_permissions())
             enable_buttons();
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.show();
+
 
 //        Button bun = (Button) findViewById(R.id.bun);
 //        bun.setOnClickListener(new View.OnClickListener()
@@ -162,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
+                Toast.makeText(MainActivity.this,"clicked",Toast.LENGTH_LONG).show();
                 if(flag == 0)
                 {
                     Toast.makeText(getApplicationContext(),"Not Connected to a Guard Post",Toast.LENGTH_SHORT).show();
@@ -169,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 else if(flag == 1)
                 {
                     // find the guard
+
                     String s = new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime());
                     s = s.substring(0,2);
                     time = Integer.parseInt(s);
@@ -188,12 +193,12 @@ public class MainActivity extends AppCompatActivity {
                         guardName = guardB.get(location);
                     }
 
-                    Log.v("fuck",guardName);
-
+                  //  Log.v("fuck",guardName);
                     Intent i = new Intent(MainActivity.this,TakeAttendance.class);
                     i.putExtra("gaurdname",guardName);
                     i.putExtra("location",location);
                     startActivity(i);
+
                 }
 
             }
@@ -259,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
                                     t3.setText("Go to a GuardPost");
                                     t2.setText("DISCONNECTED");
                                     img.setImageResource(R.drawable.disconnected);
+
                                 }
                             }
                             else
@@ -270,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
                                 t3.setText("Go to a GuardPost");
                                 t.setText("NO Location");
                                 img.setImageResource(R.drawable.disconnected);
+
                             }
 
 
@@ -286,14 +293,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void readFromFirebase()
     {
-        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.show();
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("timetable").child("gaurdPostings");
 
         databaseReference.addChildEventListener(new ChildEventListener()
 
         {
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot2, String s2)
             {
@@ -302,6 +309,9 @@ public class MainActivity extends AppCompatActivity {
                 guardA.put(g.getPOST(),g.getGAURD1());
                 guardB.put(g.getPOST(),g.getGaurd2());
                 guardC.put(g.getPOST(),g.getGAURD3());
+                if(guardA.size()>=25){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -327,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        progressDialog.dismiss();
+
     }
 
     private void readCSV()
