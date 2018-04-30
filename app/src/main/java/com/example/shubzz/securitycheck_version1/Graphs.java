@@ -116,8 +116,8 @@ public class Graphs extends AppCompatActivity {
                     PieData data = new PieData(xValsG, dataSet);
                     data.setValueFormatter(new PercentFormatter());
                     ArrayList<Integer> colors = new ArrayList<>();
-                    colors.add(Color.RED);
-                    colors.add(Color.parseColor("#6bf06b"));
+                    colors.add(Color.parseColor("#FF4081"));
+                    colors.add(Color.parseColor("#4FC3F7"));
                     dataSet.setColors(colors);
                     guards.setData(data);
                     guards.setDrawHoleEnabled(false);
