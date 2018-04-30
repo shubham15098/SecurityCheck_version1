@@ -112,7 +112,7 @@ public class ImageSlider extends AppCompatActivity {
         {
             GuardFromFirebase g = dataSnapshot.getValue(GuardFromFirebase.class);
             String nameTemp = g.getName();
-
+            Log.e("s",nameTemp);
             if(nameTemp.equals(guard))
             {
                 // here i have found the id of my guard
@@ -126,6 +126,7 @@ public class ImageSlider extends AppCompatActivity {
                     public void onChildAdded(DataSnapshot dataSnapshot2, String s2)
                     {
                         String s = dataSnapshot2.getValue().toString();
+                        Log.e("s",s);
                         ans.add(s);
 
                     }
