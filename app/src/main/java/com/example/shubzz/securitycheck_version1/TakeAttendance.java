@@ -277,8 +277,8 @@ public class TakeAttendance extends AppCompatActivity
                             } else if (radioAbsent.isChecked() == true) {
                                 Database.child("Numbers").child(IntegerMapGaurd).child("attendence").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
                                 Log.d("asd", "absent");
-                                temp1 = temp1.concat(gauradNameFetch + " was absent!!!");
-                                temp11 = temp11.concat(gauradNameFetch + " was absent!!!");
+                                temp1 = temp1.concat(gauradNameFetch.replaceAll(","," ") + " was absent!!!");
+                                temp11 = temp11.concat(gauradNameFetch.replaceAll(","," ") + " was absent!!!");
                                 Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp1);
                                 Database2.child(String.valueOf(todayday)).push().setValue(temp11);
                             }
@@ -296,8 +296,8 @@ public class TakeAttendance extends AppCompatActivity
                                 Database.child("Numbers").child(IntegerMapGaurd).child("sleeping").child(Integer.toString(todayday)).child(Integer.toString(count)).setValue(0);
                                 Log.d("asd", "absent");
                                 //Toast.makeText(TakeAttendance.this, "sleeping", Toast.LENGTH_SHORT).show();
-                                temp2 = temp2.concat(gauradNameFetch + " was sleeping!!!");
-                                temp22 = temp22.concat(gauradNameFetch + " was sleeping!!!");
+                                temp2 = temp2.concat(gauradNameFetch.replaceAll(","," ") + " was sleeping!!!");
+                                temp22 = temp22.concat(gauradNameFetch.replaceAll(","," ") + " was sleeping!!!");
                                 Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp2);
                                 Database2.child(String.valueOf(todayday)).push().setValue(temp22);
 
@@ -320,8 +320,8 @@ public class TakeAttendance extends AppCompatActivity
                                     Database.child("Numbers").child(IntegerMapGaurd).child("uniform").child(Integer.toString(todayday)).setValue(0);
                                     Log.d("asd", "No Proper Uniform");
                                     //Toast.makeText(TakeAttendance.this, "No Proper Uniform", Toast.LENGTH_SHORT).show();
-                                    temp3 = temp3.concat(gauradNameFetch + " was not in proper uniform!!!");
-                                    temp33 = temp33.concat(gauradNameFetch + " was not in proper uniform!!!");
+                                    temp3 = temp3.concat(gauradNameFetch.replaceAll(","," ") + " was not in proper uniform!!!");
+                                    temp33 = temp33.concat(gauradNameFetch.replaceAll(","," ") + " was not in proper uniform!!!");
                                     Database.child("Numbers").child(IntegerMapGaurd).child("remarks").push().setValue(temp3);
                                     Database2.child(String.valueOf(todayday)).push().setValue(temp33);
 
