@@ -333,17 +333,23 @@ public class TakeAttendance extends AppCompatActivity
                             }
                             Database3.addChildEventListener(new ChildEventListener() {
                                 @Override
-                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                    walkClass w = dataSnapshot.getValue(walkClass.class);
-                                    Log.d("asd", Integer.toString(w.getCounter()));
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s)
+                                {
+                                    if(dataSnapshot.getKey().equals(String.valueOf(todayday)))
+                                    {
+                                        walkClass w = dataSnapshot.getValue(walkClass.class);
+                                        Log.d("asd", Integer.toString(w.getCounter()));
 
-                                    Database3.child("1").child("counter").setValue(w.getCounter() + 1);
+                                        Database3.child(String.valueOf(todayday)).child("counter").setValue(w.getCounter() + 1);
 
-                                    if (w.getCounter() + 1 > 20) {
-                                        // one walk is completed
-                                        Database3.child("1").child("counter").setValue(0);
-                                        Database3.child("1").child("walk").setValue((w.getWalk()) + 1);
+                                        if (w.getCounter() + 1 > 20) {
+                                            // one walk is completed
+                                            Database3.child(String.valueOf(todayday)).child("counter").setValue(0);
+                                            Database3.child(String.valueOf(todayday)).child("walk").setValue((w.getWalk()) + 1);
+                                        }
                                     }
+
+
 
                                 }
 
