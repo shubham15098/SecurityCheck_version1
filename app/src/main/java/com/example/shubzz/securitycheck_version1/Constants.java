@@ -46,7 +46,7 @@ public final class Constants
     public static final long GEOFENCE_EXPIRATION_IN_MILLISECONDS =
             GEOFENCE_EXPIRATION_IN_HOURS * 60 * 60 * 1000;
     //public static final float GEOFENCE_RADIUS_IN_METERS = 1609; // 1 mile, 1.6 km
-    public static final float GEOFENCE_RADIUS_IN_METERS = 100; // 1 mile, 1.6 km
+    public static final float GEOFENCE_RADIUS_IN_METERS = 60; // 1 mile, 1.6 km
 
     /**
      * Map for storing information about airports in the San Francisco bay area.
@@ -57,14 +57,16 @@ public final class Constants
         //BAY_AREA_LANDMARKS.put("myRoom", new LatLng(28.547704, 77.273960));
 
         // Googleplex.
-        BAY_AREA_LANDMARKS.put("Girls Hostel", new LatLng(28.546946, 77.273716));
+//        BAY_AREA_LANDMARKS.put("Girls Hostel", new LatLng(28.546946, 77.273716));
 
-        // Test
-        BAY_AREA_LANDMARKS.put("Canteen", new LatLng(28.546358, 77.273364));
+//        // Test
+//        BAY_AREA_LANDMARKS.put("Canteen", new LatLng(28.546358, 77.273364));
+//
+//        BAY_AREA_LANDMARKS.put("New Acad", new LatLng(28.543799,77.271617));
+//
+//        BAY_AREA_LANDMARKS.put("CDX", new LatLng(28.544618, 77.272550));
 
-        BAY_AREA_LANDMARKS.put("New Acad", new LatLng(28.543799,77.271617));
-
-        BAY_AREA_LANDMARKS.put("CDX", new LatLng(28.544618, 77.272550));
+        BAY_AREA_LANDMARKS.put("Gate_Number_1", new LatLng(28.547039, 77.272580));
     }
 
 }
