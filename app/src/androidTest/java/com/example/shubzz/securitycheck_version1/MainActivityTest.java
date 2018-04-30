@@ -37,7 +37,7 @@ public class MainActivityTest {
 
         onView(withId(R.id.multiAutoCompleteTextView)).check(matches(withText("GOOD JOB")));
 
-        onView(withId(R.id.imageView)).perform(click());
+       // onView(withId(R.id.imageView)).perform(click());
 
        // onView(withId(R.id.radioButton));
         // Activity attendance= getInstrumentation().waitForMonitorWithTimeout(monitor,5000);
