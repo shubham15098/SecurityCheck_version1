@@ -34,24 +34,40 @@
         <activity
             android:name=".Home_Manager"
             android:label="@string/title_activity_home__manager"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
 
 
 
         </activity>
-        <activity android:name=".GuardsName" >
+        <activity android:name=".GuardsName"
+            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".ImageSlider" />
-        <activity android:name=".AreasActivity" >
+        <activity android:name=".ImageSlider"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AreasActivity"
+            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".GuardProfileActivity" />
-        <activity android:name=".StarOfTheWeek" />
-        <activity android:name=".Graphs" />
-        <activity android:name=".Login" />
-        <activity android:name=".Splashscreen" />
-        <activity android:name=".Supervisor" />
+        <activity android:name=".GuardProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".StarOfTheWeek"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Graphs"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Login"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Splashscreen"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Supervisor"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -66,19 +82,23 @@
 
         <activity
             android:name=".AllGaurdsPointsGeo"
-            android:label="Map" />
-        <activity android:name=".AllGaurdsGeoLocator"/>
+            android:label="Map"
+            android:screenOrientation="portrait">
 
-        <service android:name=".GeoFenceTransitionsIntentService" />
-        <service android:name=".GPS_Service"/>
-        <activity android:name=".SupervisorWalk" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".WeeklyReport">
+        <activity android:name=".AllGaurdsGeoLocator"
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".GeoFenceTransitionsIntentService"
+            android:screenOrientation="portrait"/>
+        <service android:name=".GPS_Service"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SupervisorWalk"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".WeeklyReport"
+            android:screenOrientation="portrait">
 
         </activity>
     </application>

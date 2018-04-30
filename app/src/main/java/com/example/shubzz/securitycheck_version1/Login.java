@@ -54,9 +54,8 @@ public static int RC_SIGN_IN=1;
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(Arrays.asList(
-                                        new AuthUI.IdpConfig.EmailBuilder().build(),
-                                        new AuthUI.IdpConfig.PhoneBuilder().build(),
-                                        new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                        new AuthUI.IdpConfig.EmailBuilder().build()
+                                        )).setLogo(R.drawable.policeman)
                                 .build(),
                         RC_SIGN_IN);
             }
@@ -66,9 +65,7 @@ public static int RC_SIGN_IN=1;
                             .createSignInIntentBuilder()
                             .setTheme(R.style.FirebaseUI)
                             .setAvailableProviders(Arrays.asList(
-                                    new AuthUI.IdpConfig.EmailBuilder().build(),
-                                    new AuthUI.IdpConfig.PhoneBuilder().build(),
-                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                    new AuthUI.IdpConfig.EmailBuilder().build())).setLogo(R.drawable.policeman)
                             .build(),
                     RC_SIGN_IN);
         }
@@ -163,9 +160,7 @@ public static int RC_SIGN_IN=1;
                                                     .createSignInIntentBuilder()
                                                     .setTheme(R.style.FirebaseUI)
                                                     .setAvailableProviders(Arrays.asList(
-                                                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                                                            new AuthUI.IdpConfig.PhoneBuilder().build(),
-                                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                                            new AuthUI.IdpConfig.EmailBuilder().build())).setLogo(R.drawable.policeman)
                                                     .build(),
                                             RC_SIGN_IN);
                                 }
